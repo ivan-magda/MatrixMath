@@ -1,0 +1,80 @@
+Skip to content
+This repository  
+Search
+Pull requests
+Issues
+Gist
+ @vanyaland
+ Watch 1,492
+  Star 33,498
+  Fork 12,679 github/gitignore
+ Code  Pull requests 98  Pulse  Graphs
+Branch: master Find file Copy pathgitignore/Swift.gitignore
+272913d  17 days ago
+@czechboy0 czechboy0 Merge branch 'master' of github.com:github/gitignore into keep-scm-files
+12 contributors @KrauseFx @adrfer @Coeur @czechboy0 @nwest @martinblech @natestedman @shiftkey @modocache @bbodenmiller @nrbrook @chenyufeng1991
+RawBlameHistory     62 lines (50 sloc)  1.32 KB
+# Xcode
+#
+# gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
+
+## Build generated
+build/
+DerivedData/
+
+## Various settings
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+
+## Other
+*.moved-aside
+*.xcuserstate
+
+## Obj-C/Swift specific
+*.hmap
+*.ipa
+
+## Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+# Swift Package Manager
+#
+# Add this line if you want to avoid checking in source code from Swift Package Manager dependencies.
+# Packages/
+.build/
+
+# CocoaPods
+#
+# We recommend against adding the Pods directory to your .gitignore. However
+# you should judge for yourself, the pros and cons are mentioned at:
+# https://guides.cocoapods.org/using/using-cocoapods.html#should-i-check-the-pods-directory-into-source-control
+#
+# Pods/
+
+# Carthage
+#
+# Add this line if you want to avoid checking in source code from Carthage dependencies.
+# Carthage/Checkouts
+
+Carthage/Build
+
+# fastlane
+#
+# It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the 
+# screenshots whenever they are needed.
+# For more information about the recommended setup visit:
+# https://github.com/fastlane/fastlane/blob/master/docs/Gitignore.md
+
+fastlane/report.xml
+fastlane/screenshots
+Status API Training Shop Blog About Pricing
+© 2016 GitHub, Inc. Terms Privacy Security Contact Help
+
