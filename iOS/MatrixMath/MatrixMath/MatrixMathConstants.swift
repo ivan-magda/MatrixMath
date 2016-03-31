@@ -43,6 +43,9 @@ extension MatrixMathApiClient {
     struct JSONBodyKey {
         static let Left = "left"
         static let Right = "right"
+        static let Matrix = "matrix"
+        static let VectorOfValues = "vector"
+        static let MatrixOfCoefficients = "matrix"
     }
     
     // MARK: JSON Response Keys

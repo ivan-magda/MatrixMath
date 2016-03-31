@@ -38,7 +38,6 @@ class JsonApiClient: HttpApiClient {
                     // Should not happen.
                     completionHandler(ApiClientResult.UnexpectedError(statusCode, error))
                 }
-                
             }
             
             /* GUARD: Was there an error? */
