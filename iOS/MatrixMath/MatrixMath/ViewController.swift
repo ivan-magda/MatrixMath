@@ -17,11 +17,43 @@ class ViewController: UIViewController {
     //------------------------------------------------
     // MARK: View Life Cycle
     //------------------------------------------------
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        var left = ArrayOfArrays()
+        left.append(Array(arrayLiteral: 1, 3, 9, 6))
+        left.append(Array(arrayLiteral: 5, 8, 4, 6))
+        left.append(Array(arrayLiteral: 2, 9, 7, 6))
+        left.append(Array(arrayLiteral: 4, 3, 4, 6))
+        
+        var right = ArrayOfArrays()
+        right.append(Array(arrayLiteral: 2, 3, 1, 5))
+        right.append(Array(arrayLiteral: 6, 1, 4, 6))
+        right.append(Array(arrayLiteral: 9, 9, 7, 8))
+        right.append(Array(arrayLiteral: 4, 4, 3, 6))
+        
+        MatrixMathApiClient.sharedInstance.addition(left, right: right) { (json, error) in
+            performOnMain {
+                guard error == nil else {
+                    print("An error occured: \(error!.localizedDescription)")
+                    return
+                }
+                
+                guard let json = json else {
+                    print("Receive an empty response")
+                    return
+                }
+                
+                guard let result = json[MatrixMathApiClient.JSONResponseKey.Result] as? ArrayOfArrays else {
+                    print("Failed to access JSON data with the `\(MatrixMathApiClient.JSONResponseKey.Result)` key")
+                    return
+                }
+                
+                print("Result: \(result)")
+            }
+        }
     }
-
+    
 }
 

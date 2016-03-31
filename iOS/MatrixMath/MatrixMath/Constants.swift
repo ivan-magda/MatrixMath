@@ -8,23 +8,51 @@
 
 import Foundation
 
+let BaseErrorDomain = "com.ivanmagda.MatrixMath"
+
 //-------------------------------------
 // MARK: - HttpApiClient (Constants)
 //-------------------------------------
 
-extension HttpApiClient {
+struct HttpApiClientError {
+    static let EmptyResponseDomain = "\(BaseErrorDomain).emptyresponse"
+}
+
+struct HttpApiClientErrorCode {
+    static let EmptyResponse = 12
+}
+
+//-------------------------------------
+// MARK: - JsonApiClient (Constants)
+//-------------------------------------
+
+struct JsonApiClientError {
+    static let EmptyResponseDomain = "\(BaseErrorDomain).emptyresponse"
+    static let JSONDeserializingDomain = "\(BaseErrorDomain).jsonerror.deserializing"
+    static let NotSuccsessfullResponseDomain = "\(BaseErrorDomain).badresponsecode"
+}
+
+struct JsonApiClientErrorCode {
+    static let EmptyResponse = 12
+    static let JSONDeserializing = 50
+    static let NotSuccsessfullResponseStatusCode = 51
+}
+
+//--------------------------------------------
+// MARK: - MatrixMathApiClient: (Constants)
+//--------------------------------------------
+
+extension MatrixMathApiClient {
     
-    struct Error {
-        static let BaseDomain = "com.ivanmagda.MatrixMath"
-        static let EmptyResponseDomain = "\(BaseDomain).emptyresponse"
-        static let JSONDeserializingDomain = "\(BaseDomain).jsonerror.deserializing"
-        static let NotSuccsessfullResponseDomain = "\(BaseDomain).badresponsecode"
-    }
-    
-    struct ErrorCode {
-        static let EmptyResponse = 12
-        static let JSONDeserializing = 13
-        static let NotSuccsessfullResponseStatusCode = 14
-    }
-    
+    // MARK: - Error
+    static let ErrorDomain = "\(BaseErrorDomain).MatrixMathApiClient"
+    static let ErrorCode = 100
+}
+
+//--------------------------------------------
+// MARK: - HTTTPMethodName
+//--------------------------------------------
+struct HTTTPMethodName {
+    static let Get = "GET"
+    static let Post = "POST"
 }

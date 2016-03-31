@@ -1,8 +1,8 @@
 //
-//  LoginViewController.swift
-//  On the Map
+//  JsonApiClient.swift
+//  MatrixMath
 //
-//  Created by Ivan Magda on 20.03.16.
+//  Created by Ivan Magda on 31.03.16.
 //  Copyright © 2016 Ivan Magda. All rights reserved.
 //
 
@@ -79,8 +79,8 @@ class HttpApiClient {
             guard let data = data else {
                 self.debugLog("Received an empty response")
                 let userInfo = [NSLocalizedDescriptionKey: "No data was returned by the request"]
-                completion(data: nil, response: httpResponse, error: NSError(domain: Error.EmptyResponseDomain,
-                    code: ErrorCode.EmptyResponse, userInfo: userInfo))
+                completion(data: nil, response: httpResponse, error: NSError(domain: HttpApiClientError.EmptyResponseDomain,
+                    code: HttpApiClientErrorCode.EmptyResponse, userInfo: userInfo))
                 return
             }
             

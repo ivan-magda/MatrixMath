@@ -48,20 +48,18 @@ class JsonApiClient: HttpApiClient {
             }
             
             /* GUARD: Did we get a successful 2XX response? */
-            guard let statusCode = httpResponse?.statusCode where statusCode >= 200 && statusCode <= 299 else {
-                let userInfo = [NSLocalizedDescriptionKey: "Your request returned a status code other than 2xx!"]
-                let error = NSError(domain: Error.NotSuccsessfullResponseDomain,
-                                    code: ErrorCode.NotSuccsessfullResponseStatusCode,
-                                    userInfo: userInfo)
-                sendError(error, response: httpResponse!)
+            guard let statusCode = httpResponse?.statusCode
+                where statusCode >= 200 && statusCode <= 299 else {
+                self.debugLog("\(#function). Request returned a status code other than 2xx!")
+                sendError(nil, response: httpResponse!)
                 return
             }
             
             /* GUARD: Was there any data returned? */
             guard let data = data else {
                 let userInfo = [NSLocalizedDescriptionKey: "No data was returned by the request"]
-                let error =  NSError(domain: Error.EmptyResponseDomain,
-                                     code: ErrorCode.EmptyResponse,
+                let error =  NSError(domain: JsonApiClientError.EmptyResponseDomain,
+                                     code: JsonApiClientErrorCode.EmptyResponse,
                                      userInfo: userInfo)
                 sendError(error, response: httpResponse!)
                 return
@@ -80,8 +78,8 @@ class JsonApiClient: HttpApiClient {
                     self.debugLog(errorMessage)
                     
                     let userInfo = [NSLocalizedDescriptionKey: errorMessage]
-                    let error = NSError(domain: Error.JSONDeserializingDomain,
-                                        code: ErrorCode.JSONDeserializing, userInfo: userInfo)
+                    let error = NSError(domain: JsonApiClientError.JSONDeserializingDomain,
+                                        code: JsonApiClientErrorCode.JSONDeserializing, userInfo: userInfo)
                     sendError(error, response: httpResponse!)
                     return
                 }

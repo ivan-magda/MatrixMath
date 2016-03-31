@@ -1,8 +1,8 @@
 //
-//  JSON.swift
-//  On the Map
+//  JsonApiClient.swift
+//  MatrixMath
 //
-//  Created by Ivan Magda on 20.03.16.
+//  Created by Ivan Magda on 31.03.16.
 //  Copyright © 2016 Ivan Magda. All rights reserved.
 //
 
@@ -37,27 +37,27 @@ public class JSON {
     // These functions retrieve data from JSON structures in a type-safe manner,
     // and they're the building blocks.
     
-    class func number(input: [NSObject:AnyObject], key: String) -> NSNumber? {
+    class func number(input: [NSObject: AnyObject], key: String) -> NSNumber? {
         return input[key] >>>= { $0 as? NSNumber }
     }
     
-    class func int(input: [NSObject:AnyObject], key: String) -> Int? {
+    class func int(input: [NSObject: AnyObject], key: String) -> Int? {
         return number(input, key: key).map { $0.integerValue }
     }
     
-    class func float(input: [NSObject:AnyObject], key: String) -> Float? {
+    class func float(input: [NSObject: AnyObject], key: String) -> Float? {
         return number(input, key: key).map { $0.floatValue }
     }
     
-    class func double(input: [NSObject:AnyObject], key: String) -> Double? {
+    class func double(input: [NSObject: AnyObject], key: String) -> Double? {
         return number(input, key: key).map { $0.doubleValue }
     }
     
-    class func string(input: [String:AnyObject], key: String) -> String? {
+    class func string(input: [String: AnyObject], key: String) -> String? {
         return input[key] >>>= { $0 as? String }
     }
     
-    class func bool(input: [String:AnyObject], key: String) -> Bool? {
+    class func bool(input: [String: AnyObject], key: String) -> Bool? {
         return number(input, key: key).map { $0.boolValue }
     }
     
