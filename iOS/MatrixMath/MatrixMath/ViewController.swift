@@ -21,36 +21,34 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        var left = ArrayOfArrays()
+        var left = MatrixDataType()
         left.append(Array(arrayLiteral: 1, 3, 9, 6))
         left.append(Array(arrayLiteral: 5, 8, 4, 6))
         left.append(Array(arrayLiteral: 2, 9, 7, 6))
         left.append(Array(arrayLiteral: 4, 3, 4, 6))
         
-        var right = ArrayOfArrays()
+        var right = MatrixDataType()
         right.append(Array(arrayLiteral: 2, 3, 1, 5))
         right.append(Array(arrayLiteral: 6, 1, 4, 6))
         right.append(Array(arrayLiteral: 9, 9, 7, 8))
         right.append(Array(arrayLiteral: 4, 4, 3, 6))
         
-        MatrixMathApiClient.sharedInstance.addition(left, right: right) { (json, error) in
+        let lftMatrix = Matrix(data: left)
+        let rghMatrix = Matrix(data: right)
+        
+        MatrixMathApiClient.sharedInstance.addition(left: lftMatrix, right: rghMatrix) { (matrix, error) in
             performOnMain {
                 guard error == nil else {
                     print("An error occured: \(error!.localizedDescription)")
                     return
                 }
                 
-                guard let json = json else {
-                    print("Receive an empty response")
+                guard let matrix = matrix else {
+                    print("Receive an empty response. There is no Matrix object.")
                     return
                 }
                 
-                guard let result = json[MatrixMathApiClient.JSONResponseKey.Result] as? ArrayOfArrays else {
-                    print("Failed to access JSON data with the `\(MatrixMathApiClient.JSONResponseKey.Result)` key")
-                    return
-                }
-                
-                print("Result: \(result)")
+                print("Addition result: \(matrix.data)")
             }
         }
     }

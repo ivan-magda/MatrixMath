@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		750905B01CAFFC2200BF8EF8 /* Matrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750905AF1CAFFC2200BF8EF8 /* Matrix.swift */; };
+		750905B71CB018FC00BF8EF8 /* Matrix+JSONParselable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750905B61CB018FC00BF8EF8 /* Matrix+JSONParselable.swift */; };
+		750905B91CB0192400BF8EF8 /* JSONParselable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750905B81CB0192400BF8EF8 /* JSONParselable.swift */; };
 		756B66F91CAD27C8002E4B4A /* MatrixMathApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 756B66F81CAD27C8002E4B4A /* MatrixMathApiClient.swift */; };
 		756B66FC1CAD291B002E4B4A /* MatrixMathConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 756B66FB1CAD291B002E4B4A /* MatrixMathConstants.swift */; };
 		759C4AA11CAC9F6600CBA070 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759C4AA01CAC9F6600CBA070 /* AppDelegate.swift */; };
@@ -18,7 +21,6 @@
 		759C4AC11CAC9F6600CBA070 /* MatrixMathUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759C4AC01CAC9F6600CBA070 /* MatrixMathUITests.swift */; };
 		759C4AD21CACA25600CBA070 /* GCDBlackBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759C4AD11CACA25600CBA070 /* GCDBlackBox.swift */; };
 		759C4AD61CACA3CF00CBA070 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759C4AD41CACA3CF00CBA070 /* JSON.swift */; };
-		759C4AD71CACA3CF00CBA070 /* JSONParselable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759C4AD51CACA3CF00CBA070 /* JSONParselable.swift */; };
 		759C4ADC1CACA4F400CBA070 /* HttpApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759C4ADA1CACA4F400CBA070 /* HttpApiClient.swift */; };
 		759C4ADD1CACA4F400CBA070 /* ApiClientResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759C4ADB1CACA4F400CBA070 /* ApiClientResult.swift */; };
 		759C4AE01CACA5A300CBA070 /* JsonApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759C4ADF1CACA5A300CBA070 /* JsonApiClient.swift */; };
@@ -43,6 +45,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		750905AF1CAFFC2200BF8EF8 /* Matrix.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Matrix.swift; sourceTree = "<group>"; };
+		750905B61CB018FC00BF8EF8 /* Matrix+JSONParselable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Matrix+JSONParselable.swift"; sourceTree = "<group>"; };
+		750905B81CB0192400BF8EF8 /* JSONParselable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONParselable.swift; sourceTree = "<group>"; };
 		756B66F81CAD27C8002E4B4A /* MatrixMathApiClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatrixMathApiClient.swift; sourceTree = "<group>"; };
 		756B66FB1CAD291B002E4B4A /* MatrixMathConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatrixMathConstants.swift; sourceTree = "<group>"; };
 		759C4A9D1CAC9F6500CBA070 /* MatrixMath.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MatrixMath.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -60,7 +65,6 @@
 		759C4AC21CAC9F6600CBA070 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		759C4AD11CACA25600CBA070 /* GCDBlackBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GCDBlackBox.swift; sourceTree = "<group>"; };
 		759C4AD41CACA3CF00CBA070 /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
-		759C4AD51CACA3CF00CBA070 /* JSONParselable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONParselable.swift; sourceTree = "<group>"; };
 		759C4ADA1CACA4F400CBA070 /* HttpApiClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpApiClient.swift; sourceTree = "<group>"; };
 		759C4ADB1CACA4F400CBA070 /* ApiClientResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiClientResult.swift; sourceTree = "<group>"; };
 		759C4ADF1CACA5A300CBA070 /* JsonApiClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JsonApiClient.swift; sourceTree = "<group>"; };
@@ -92,6 +96,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		750905B31CB001F200BF8EF8 /* Matrix */ = {
+			isa = PBXGroup;
+			children = (
+				750905AF1CAFFC2200BF8EF8 /* Matrix.swift */,
+				750905B61CB018FC00BF8EF8 /* Matrix+JSONParselable.swift */,
+			);
+			name = Matrix;
+			sourceTree = "<group>";
+		};
 		756B66FA1CAD2905002E4B4A /* MatrixMathAPI */ = {
 			isa = PBXGroup;
 			children = (
@@ -192,6 +205,7 @@
 			isa = PBXGroup;
 			children = (
 				759C4AD91CACA3DE00CBA070 /* JSON */,
+				750905B31CB001F200BF8EF8 /* Matrix */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -200,7 +214,7 @@
 			isa = PBXGroup;
 			children = (
 				759C4AD41CACA3CF00CBA070 /* JSON.swift */,
-				759C4AD51CACA3CF00CBA070 /* JSONParselable.swift */,
+				750905B81CB0192400BF8EF8 /* JSONParselable.swift */,
 			);
 			name = JSON;
 			sourceTree = "<group>";
@@ -347,14 +361,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				750905B91CB0192400BF8EF8 /* JSONParselable.swift in Sources */,
 				759C4AA31CAC9F6600CBA070 /* ViewController.swift in Sources */,
 				759C4AE01CACA5A300CBA070 /* JsonApiClient.swift in Sources */,
 				759C4ADD1CACA4F400CBA070 /* ApiClientResult.swift in Sources */,
-				759C4AD71CACA3CF00CBA070 /* JSONParselable.swift in Sources */,
 				759C4AD21CACA25600CBA070 /* GCDBlackBox.swift in Sources */,
 				759C4AA11CAC9F6600CBA070 /* AppDelegate.swift in Sources */,
 				759C4AD61CACA3CF00CBA070 /* JSON.swift in Sources */,
 				759C4ADC1CACA4F400CBA070 /* HttpApiClient.swift in Sources */,
+				750905B71CB018FC00BF8EF8 /* Matrix+JSONParselable.swift in Sources */,
+				750905B01CAFFC2200BF8EF8 /* Matrix.swift in Sources */,
 				756B66FC1CAD291B002E4B4A /* MatrixMathConstants.swift in Sources */,
 				756B66F91CAD27C8002E4B4A /* MatrixMathApiClient.swift in Sources */,
 				759C4AE21CACA79C00CBA070 /* Constants.swift in Sources */,

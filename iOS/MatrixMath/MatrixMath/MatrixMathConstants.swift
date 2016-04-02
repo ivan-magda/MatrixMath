@@ -26,13 +26,13 @@ extension MatrixMathApiClient {
     // MARK: Methods
     struct Method {
         static let Addition = "/add"
-        static let Subtitution = "/sub"
-        static let Multiplication = "/multiply"
+        static let Subtract = "/sub"
+        static let Multiply = "/multiply"
         static let Transpose = "/transpose"
         static let Determinant = "/determinant"
         static let Invert = "/invert"
         static let SolveSystem = "/solve"
-        static let SolveSystemErrorCorrection = "/solveec"
+        static let SolveSystemWithErrorCorrection = "/solveec"
         
         // TODO: not implemented methods on the server yet.
         static let Rank = "/rank"

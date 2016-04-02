@@ -61,4 +61,12 @@ public class JSON {
         return number(input, key: key).map { $0.boolValue }
     }
     
+    class func array<T>(input: [String: AnyObject], key: String) -> Array<T>? {
+        return input[key] >>>= { $0 as? Array<T> }
+    }
+    
+    class func arrayOfArrays<T>(input: [String: AnyObject], key: String) -> Array<Array<T>>? {
+        return input[key] >>>= { $0 as? Array<Array<T>> }
+    }
+    
 }

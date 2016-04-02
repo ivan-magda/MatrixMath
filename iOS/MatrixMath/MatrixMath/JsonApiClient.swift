@@ -64,6 +64,11 @@ class JsonApiClient: HttpApiClient {
                 return
             }
             
+            // Print the recieved data.
+            if let dataString = String(data: data, encoding: NSUTF8StringEncoding) {
+                self.debugLog("Recieved data: \(dataString)")
+            }
+            
             // Deserializing the JSON data.
             self.deserializeJSONDataWithCompletionHandler(data) { (jsonObject, error) in
                 guard error == nil else {

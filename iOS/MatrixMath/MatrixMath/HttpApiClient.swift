@@ -100,7 +100,7 @@ class HttpApiClient {
         guard loggingEnabled else {
             return
         }
-        print(msg)
+        debugPrint(msg)
     }
     
     func debugResponseData(data: NSData) {
