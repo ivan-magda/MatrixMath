@@ -8,6 +8,10 @@
 
 import Foundation
 
+//-------------------------------------
+// MARK: Typealiases
+//-------------------------------------
+
 typealias DataTaskCompletionHandler = (data: NSData?, response: NSHTTPURLResponse?, error: NSError?) -> Void
 
 //-------------------------------------

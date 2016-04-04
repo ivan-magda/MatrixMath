@@ -8,8 +8,15 @@
 
 import Foundation
 
-typealias MatrixMathAPIClientMatrixResultBlock = (matrix: Matrix?, error: NSError?) -> Void
-typealias MatrixMathAPIClientSolutionResultBlock = (vector: Array<Double>?, error: NSError?) -> Void
+//--------------------------------------------
+// MARK: Typealiases
+//--------------------------------------------
+
+typealias MatrixMathMatrixResultBlock = (matrix: Matrix?, error: NSError?) -> Void
+typealias MatrixMathSystemSolutionResultBlock = (vector: Array<Double>?, error: NSError?) -> Void
+typealias MatrixMathValueResultBlock = (result: Double?, error: NSError?) -> Void
+
+private typealias ProcessOnApiClientResultBlock = (json: JSONDictionary?, error: NSError?) -> Void
 
 //--------------------------------------------
 // MARK: - MatrixMathApiClient: JsonApiClient
@@ -35,78 +42,115 @@ class MatrixMathApiClient: JsonApiClient {
     }()
     
     //-----------------------------------
-    // MARK: API Methods
+    // MARK: - API Methods -
+    // MARK: Binary Operations
     //-----------------------------------
     
-    func addition(left lft: Matrix, right rgh: Matrix, completionHandler: MatrixMathAPIClientMatrixResultBlock) {
-        let body = bodyForBinaryOperation(left: lft, right: rgh)
-        let request = postRequestWithParameters(nil, path: Method.Addition, body: body)
-        fetchData(request) { (result: ApiClientResult) in
-            self.processOnApiClientResult(result, withCompletionHandler: completionHandler)
+    func addition(left lft: Matrix, right rgh: Matrix, completionHandler: MatrixMathMatrixResultBlock) {
+        executeMatrixBinaryOperationForMethod(Method.Addition, left: lft, right: rgh, completionHandler: completionHandler)
+    }
+    
+    func subtract(left lft: Matrix, right rgh: Matrix, completionHandler: MatrixMathMatrixResultBlock) {
+        executeMatrixBinaryOperationForMethod(Method.Subtract, left: lft, right: rgh, completionHandler: completionHandler)
+    }
+    
+    func multiply(left lft: Matrix, right rgh: Matrix, completionHandler: MatrixMathMatrixResultBlock) {
+        executeMatrixBinaryOperationForMethod(Method.Multiply, left: lft, right: rgh, completionHandler: completionHandler)
+    }
+
+    //-----------------------------------
+    // MARK: Unary Operations
+    //-----------------------------------
+    
+    func transpose(matrix matrix: Matrix, completionHandler: MatrixMathMatrixResultBlock) {
+        executeMatrixUnaryOperationForMethod(Method.Transpose, matrix: matrix) { (json, error) in
+            self.retrieveMatrixFromJSON(json, error: error, completionHandler: completionHandler)
         }
     }
     
-    func subtract(left lft: Matrix, right rgh: Matrix, completionHandler: MatrixMathAPIClientMatrixResultBlock) {
-        let body = bodyForBinaryOperation(left: lft, right: rgh)
-        let request = postRequestWithParameters(nil, path: Method.Subtract, body: body)
-        fetchData(request) { (result: ApiClientResult) in
-            self.processOnApiClientResult(result, withCompletionHandler: completionHandler)
+    func invert(matrix matrix: Matrix, completionHandler: MatrixMathMatrixResultBlock) {
+        executeMatrixUnaryOperationForMethod(Method.Invert, matrix: matrix) { (json, error) in
+            self.retrieveMatrixFromJSON(json, error: error, completionHandler: completionHandler)
         }
     }
     
-    func multiply(left lft: Matrix, right rgh: Matrix, completionHandler: MatrixMathAPIClientMatrixResultBlock) {
-        let body = bodyForBinaryOperation(left: lft, right: rgh)
-        let request = postRequestWithParameters(nil, path: Method.Multiply, body: body)
-        fetchData(request) { (result: ApiClientResult) in
-            self.processOnApiClientResult(result, withCompletionHandler: completionHandler)
+    func determinant(matrix matrix: Matrix, completionHandler: MatrixMathValueResultBlock) {
+        executeMatrixUnaryOperationForMethod(Method.Determinant, matrix: matrix) { (json, error) in
+            guard error == nil && json != nil else {
+                completionHandler(result: nil, error: error)
+                return
+            }
+            
+            guard let determinant = json![JSONResponseKey.Result] as? Double else {
+                completionHandler(result: nil, error: error)
+                return
+            }
+            
+            completionHandler(result: determinant, error: nil)
         }
     }
     
-    func transpose(matrix matrix: Matrix, completionHandler: MatrixMathAPIClientMatrixResultBlock) {
-        let body = bodyForUnaryOperation(matrix)
-        let request = postRequestWithParameters(nil, path: Method.Transpose, body: body)
-        fetchData(request) { (result: ApiClientResult) in
-            self.processOnApiClientResult(result, withCompletionHandler: completionHandler)
-        }
+    //---------------------------------------------------
+    // MARK: Solves a system of linear equations: Ax = b
+    //---------------------------------------------------
+    
+    func solve(coefficientsMatrix matrix: Matrix, valuesVector vector: Array<Double>, completionHandler: MatrixMathSystemSolutionResultBlock) {
+        executeMatrixSolveOperationForMethod(Method.SolveSystem, coefficientsMatrix: matrix, valuesVector: vector, completionHandler: completionHandler)
     }
     
-    // TODO: Implement
-    func determinant(matrix matrix: Matrix, completionHandler: (Int?, NSError?) -> Void) {
-        let body = bodyForUnaryOperation(matrix)
-        let request = postRequestWithParameters(nil, path: Method.Determinant, body: body)
-        fetchData(request) { (result: ApiClientResult) in
-            //self.processOnApiClientResult(result, withCompletionHandler: completionHandler)
-        }
-    }
-    
-    func invert(matrix matrix: Matrix, completionHandler: MatrixMathAPIClientMatrixResultBlock) {
-        let body = bodyForUnaryOperation(matrix)
-        let request = postRequestWithParameters(nil, path: Method.Invert, body: body)
-        fetchData(request) { (result: ApiClientResult) in
-            self.processOnApiClientResult(result, withCompletionHandler: completionHandler)
-        }
-    }
-    
-    // TODO: Implement
-    func solve(coefficientsMatrix matrix: Matrix, valuesVector vector: Array<Double>, completionHandler: MatrixMathAPIClientSolutionResultBlock) {
-        let body = "{\"\(JSONBodyKey.Matrix)\": \(matrix.data), \"\(JSONBodyKey.VectorOfValues)\": \(vector)}"
-        let request = postRequestWithParameters(nil, path: Method.SolveSystem, body: body)
-        fetchData(request) { (result: ApiClientResult) in
-            //self.processOnApiClientResult(result, withCompletionHandler: completionHandler)
-        }
-    }
-    
-    // TODO: Implement
-    func solveWithErrorCorrection(coefficientsMatrix matrix: Matrix, valuesVector vector: Array<Double>, completionHandler: MatrixMathAPIClientSolutionResultBlock) {
-        let body = "{\"\(JSONBodyKey.Matrix)\": \(matrix.data), \"\(JSONBodyKey.VectorOfValues)\": \(vector)}"
-        let request = postRequestWithParameters(nil, path: Method.SolveSystemWithErrorCorrection, body: body)
-        fetchData(request) { (result: ApiClientResult) in
-            //self.processOnApiClientResult(result, withCompletionHandler: completionHandler)
-        }
+    func solveWithErrorCorrection(coefficientsMatrix matrix: Matrix, valuesVector
+        vector: Array<Double>, completionHandler: MatrixMathSystemSolutionResultBlock) {
+        executeMatrixSolveOperationForMethod(Method.SolveSystemWithErrorCorrection, coefficientsMatrix: matrix, valuesVector: vector, completionHandler: completionHandler)
     }
     
     //-----------------------------------
-    // MARK: Helpers
+    // MARK: - Helpers -
+    // MARK: Execute Requests
+    //-----------------------------------
+    
+    private func executeMatrixUnaryOperationForMethod(method: String, matrix: Matrix, completionHandler: ProcessOnApiClientResultBlock) {
+        let body = bodyForUnaryOperation(matrix)
+        let request = postRequestWithParameters(nil, path: method, body: body)
+        
+        fetchData(request) { (result: ApiClientResult) in
+            self.processOnApiClientResult(result, withCompletionHandler: completionHandler)
+        }
+    }
+    
+    private func executeMatrixBinaryOperationForMethod(method: String, left lft: Matrix, right rgh: Matrix, completionHandler: MatrixMathMatrixResultBlock) {
+        let body = bodyForBinaryOperation(left: lft, right: rgh)
+        let request = postRequestWithParameters(nil, path: method, body: body)
+        
+        fetchData(request) { (result: ApiClientResult) in
+            self.processOnApiClientResult(result, withCompletionHandler: { (json, error) in
+                self.retrieveMatrixFromJSON(json, error: error, completionHandler: completionHandler)
+            })
+        }
+    }
+    
+    private func executeMatrixSolveOperationForMethod(method: String, coefficientsMatrix matrix: Matrix, valuesVector vector: Array<Double>, completionHandler: MatrixMathSystemSolutionResultBlock) {
+        let body = "{\"\(JSONBodyKey.Matrix)\": \(matrix.data), \"\(JSONBodyKey.VectorOfValues)\": \(vector)}"
+        let request = postRequestWithParameters(nil, path: method, body: body)
+        
+        fetchData(request) { (result: ApiClientResult) in
+            self.processOnApiClientResult(result, withCompletionHandler: { (json, error) in
+                guard error == nil && json != nil else {
+                    completionHandler(vector: nil, error: error)
+                    return
+                }
+                
+                guard let vector = json![JSONResponseKey.Result] as? Array<Double> else {
+                    completionHandler(vector: nil, error: error)
+                    return
+                }
+                
+                completionHandler(vector: vector, error: nil)
+            })
+        }
+    }
+    
+    //-----------------------------------
+    // MARK: Build Requests
     //-----------------------------------
     
     private func bodyForUnaryOperation(matrix: Matrix) -> String {
@@ -151,13 +195,17 @@ class MatrixMathApiClient: JsonApiClient {
         return components.URL!
     }
     
-    private func processOnApiClientResult(result: ApiClientResult, withCompletionHandler completionHandler: MatrixMathAPIClientMatrixResultBlock) {
+    //-----------------------------------
+    // MARK: Handle Response
+    //-----------------------------------
+    
+    private func processOnApiClientResult(result: ApiClientResult, withCompletionHandler completionHandler: ProcessOnApiClientResultBlock) {
         func sendError(error: String) {
             let userInfo = [NSLocalizedDescriptionKey: error]
             let error = NSError(domain: MatrixMathApiClient.ErrorDomain,
                                 code: MatrixMathApiClient.ErrorCode,
                                 userInfo: userInfo)
-            completionHandler(matrix: nil, error: error)
+            completionHandler(json: nil, error: error)
         }
         
         switch result {
@@ -168,18 +216,11 @@ class MatrixMathApiClient: JsonApiClient {
                     let message = json[JSONResponseKey.StatusMessage] as! String
                     self.debugLog("Server return an error with message: \(message)")
                     sendError(message)
-                return
+                    return
             }
-            
             self.debugLog("Successfully received a result from the server with status code 200.")
             
-            /* GUARD: Decodes a matrix object from JSONDictionary */
-            guard let matrix = Matrix.decode(json) else {
-                sendError("Could not create Matrix from JSON data")
-                return
-            }
-            
-            completionHandler(matrix: matrix, error: nil)
+            completionHandler(json: json, error: nil)
         case .Error(let error):
             sendError(error.localizedDescription)
         case .NotFound:
@@ -191,6 +232,15 @@ class MatrixMathApiClient: JsonApiClient {
         case .UnexpectedError(let code, let error):
             sendError("There is unexpected error: \(error?.localizedDescription), code: \(code).")
         }
+    }
+    
+    private func retrieveMatrixFromJSON(json: JSONDictionary?, error: NSError?, completionHandler: MatrixMathMatrixResultBlock) {
+        guard error == nil && json != nil else {
+            completionHandler(matrix: nil, error: error)
+            return
+        }
+        
+        completionHandler(matrix: Matrix.decode(json!), error: nil)
     }
     
 }
