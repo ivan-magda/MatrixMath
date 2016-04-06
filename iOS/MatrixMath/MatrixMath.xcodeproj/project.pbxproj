@@ -10,10 +10,12 @@
 		750905B01CAFFC2200BF8EF8 /* Matrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750905AF1CAFFC2200BF8EF8 /* Matrix.swift */; };
 		750905B71CB018FC00BF8EF8 /* Matrix+JSONParselable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750905B61CB018FC00BF8EF8 /* Matrix+JSONParselable.swift */; };
 		750905B91CB0192400BF8EF8 /* JSONParselable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750905B81CB0192400BF8EF8 /* JSONParselable.swift */; };
+		7555A3C81CB55188004C32D3 /* MatrixMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555A3C71CB55188004C32D3 /* MatrixMethod.swift */; };
+		7555A3CA1CB551BF004C32D3 /* MatrixMethodType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555A3C91CB551BF004C32D3 /* MatrixMethodType.swift */; };
 		756B66F91CAD27C8002E4B4A /* MatrixMathApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 756B66F81CAD27C8002E4B4A /* MatrixMathApiClient.swift */; };
 		756B66FC1CAD291B002E4B4A /* MatrixMathConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 756B66FB1CAD291B002E4B4A /* MatrixMathConstants.swift */; };
 		759C4AA11CAC9F6600CBA070 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759C4AA01CAC9F6600CBA070 /* AppDelegate.swift */; };
-		759C4AA31CAC9F6600CBA070 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759C4AA21CAC9F6600CBA070 /* ViewController.swift */; };
+		759C4AA31CAC9F6600CBA070 /* MatrixMethodsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759C4AA21CAC9F6600CBA070 /* MatrixMethodsTableViewController.swift */; };
 		759C4AA61CAC9F6600CBA070 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 759C4AA41CAC9F6600CBA070 /* Main.storyboard */; };
 		759C4AA81CAC9F6600CBA070 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 759C4AA71CAC9F6600CBA070 /* Assets.xcassets */; };
 		759C4AAB1CAC9F6600CBA070 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 759C4AA91CAC9F6600CBA070 /* LaunchScreen.storyboard */; };
@@ -48,11 +50,15 @@
 		750905AF1CAFFC2200BF8EF8 /* Matrix.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Matrix.swift; sourceTree = "<group>"; };
 		750905B61CB018FC00BF8EF8 /* Matrix+JSONParselable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Matrix+JSONParselable.swift"; sourceTree = "<group>"; };
 		750905B81CB0192400BF8EF8 /* JSONParselable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONParselable.swift; sourceTree = "<group>"; };
+		7555A3C71CB55188004C32D3 /* MatrixMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatrixMethod.swift; sourceTree = "<group>"; };
+		7555A3C91CB551BF004C32D3 /* MatrixMethodType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatrixMethodType.swift; sourceTree = "<group>"; };
+		7555A3D01CB561BA004C32D3 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
+		7555A3D31CB562E9004C32D3 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		756B66F81CAD27C8002E4B4A /* MatrixMathApiClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatrixMathApiClient.swift; sourceTree = "<group>"; };
 		756B66FB1CAD291B002E4B4A /* MatrixMathConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatrixMathConstants.swift; sourceTree = "<group>"; };
 		759C4A9D1CAC9F6500CBA070 /* MatrixMath.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MatrixMath.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		759C4AA01CAC9F6600CBA070 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		759C4AA21CAC9F6600CBA070 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		759C4AA21CAC9F6600CBA070 /* MatrixMethodsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatrixMethodsTableViewController.swift; sourceTree = "<group>"; };
 		759C4AA51CAC9F6600CBA070 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		759C4AA71CAC9F6600CBA070 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		759C4AAA1CAC9F6600CBA070 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -101,6 +107,8 @@
 			children = (
 				750905AF1CAFFC2200BF8EF8 /* Matrix.swift */,
 				750905B61CB018FC00BF8EF8 /* Matrix+JSONParselable.swift */,
+				7555A3C71CB55188004C32D3 /* MatrixMethod.swift */,
+				7555A3C91CB551BF004C32D3 /* MatrixMethodType.swift */,
 			);
 			name = Matrix;
 			sourceTree = "<group>";
@@ -178,8 +186,8 @@
 			isa = PBXGroup;
 			children = (
 				759C4AA41CAC9F6600CBA070 /* Main.storyboard */,
-				759C4AA71CAC9F6600CBA070 /* Assets.xcassets */,
 				759C4AA91CAC9F6600CBA070 /* LaunchScreen.storyboard */,
+				759C4AA71CAC9F6600CBA070 /* Assets.xcassets */,
 			);
 			name = Assets;
 			sourceTree = "<group>";
@@ -187,7 +195,7 @@
 		759C4AD01CACA0D700CBA070 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				759C4AA21CAC9F6600CBA070 /* ViewController.swift */,
+				759C4AA21CAC9F6600CBA070 /* MatrixMethodsTableViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -316,6 +324,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ru,
 			);
 			mainGroup = 759C4A941CAC9F6500CBA070;
 			productRefGroup = 759C4A9E1CAC9F6500CBA070 /* Products */;
@@ -362,8 +371,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				750905B91CB0192400BF8EF8 /* JSONParselable.swift in Sources */,
-				759C4AA31CAC9F6600CBA070 /* ViewController.swift in Sources */,
+				759C4AA31CAC9F6600CBA070 /* MatrixMethodsTableViewController.swift in Sources */,
 				759C4AE01CACA5A300CBA070 /* JsonApiClient.swift in Sources */,
+				7555A3C81CB55188004C32D3 /* MatrixMethod.swift in Sources */,
+				7555A3CA1CB551BF004C32D3 /* MatrixMethodType.swift in Sources */,
 				759C4ADD1CACA4F400CBA070 /* ApiClientResult.swift in Sources */,
 				759C4AD21CACA25600CBA070 /* GCDBlackBox.swift in Sources */,
 				759C4AA11CAC9F6600CBA070 /* AppDelegate.swift in Sources */,
@@ -413,6 +424,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				759C4AA51CAC9F6600CBA070 /* Base */,
+				7555A3D01CB561BA004C32D3 /* ru */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -421,6 +433,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				759C4AAA1CAC9F6600CBA070 /* Base */,
+				7555A3D31CB562E9004C32D3 /* ru */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";

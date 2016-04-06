@@ -8,11 +8,26 @@
 
 import UIKit
 
-//------------------------------------------------
-// MARK: - ViewController: UIViewController
-//------------------------------------------------
+//-----------------------------------------------------------------
+// MARK: Types
+//-----------------------------------------------------------------
 
-class ViewController: UIViewController {
+private enum MatrixOperationTableViewCellReuseIdentifier: String {
+    case Basic = "MatrixOperationTableViewCell"
+    case Subtitle = "MatrixOperationDetailTableViewCell"
+}
+
+//-----------------------------------------------------------------
+// MARK: - MatrixMethodsTableViewController: UITableViewController
+//-----------------------------------------------------------------
+
+class MatrixMethodsTableViewController: UITableViewController {
+    
+    //------------------------------------------------
+    // MARK: Properties
+    //------------------------------------------------
+    
+    private var methods: [MatrixMethod]!
     
     //------------------------------------------------
     // MARK: View Life Cycle
@@ -20,6 +35,8 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        methods = MatrixMethod.getAllMethods()
         
         var left = MatrixDataType()
         left.append(Array(arrayLiteral: 1, 3, 9, 6))
@@ -107,6 +124,46 @@ class ViewController: UIViewController {
             
             print("Result vector: \(vector)")
         }
+    }
+    
+    //------------------------------------------------
+    // MARK: UITableViewDataSource
+    //------------------------------------------------
+    
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return methods.count
+    }
+    
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        var cell: UITableViewCell!
+        
+        if indexPath.row == methods.count - 1 {
+            cell = tableView.dequeueReusableCellWithIdentifier(MatrixOperationTableViewCellReuseIdentifier.Subtitle.rawValue)
+            configureCell(cell, forRowAtIndexPath: indexPath)
+        } else {
+            cell = tableView.dequeueReusableCellWithIdentifier(MatrixOperationTableViewCellReuseIdentifier.Basic.rawValue)
+            configureCell(cell, forRowAtIndexPath: indexPath)
+        }
+        
+        return cell
+    }
+    
+    private func configureCell(cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        let method = methods[indexPath.row]
+        
+        cell.textLabel?.text = method.name
+        
+        if indexPath.row == methods.count - 1 {
+            cell.detailTextLabel?.text = method.detailDescription
+        }
+    }
+    
+    //------------------------------------------------
+    // MARK: UITableViewDelegate
+    //------------------------------------------------
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
     }
     
 }
