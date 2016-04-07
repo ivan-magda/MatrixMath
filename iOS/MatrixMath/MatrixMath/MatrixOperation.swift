@@ -9,10 +9,10 @@
 import Foundation
 
 //--------------------------------------
-// MARK: - MatrixMethod
+// MARK: - MatrixOperation
 //--------------------------------------
 
-struct MatrixMethod {
+class MatrixOperation {
     
     //--------------------------------------
     // MARK: Properties
@@ -20,13 +20,13 @@ struct MatrixMethod {
     
     let name: String
     let detailDescription: String
-    let type: MatrixMethodType
+    let type: MatrixOperationType
     
     //--------------------------------------
     // MARK: Initialize
     //--------------------------------------
     
-    init(name: String, description: String = "", type: MatrixMethodType) {
+    init(name: String, description: String = "", type: MatrixOperationType) {
         self.name = name
         self.detailDescription = description
         self.type = type
@@ -36,31 +36,31 @@ struct MatrixMethod {
     // MARK: Methods
     //--------------------------------------
     
-    static func getAllMethods() -> [MatrixMethod] {
-        var methods = [MatrixMethod]()
+    static func getAllMethods() -> [MatrixOperation] {
+        var methods = [MatrixOperation]()
         
-        methods.append(MatrixMethod(
+        methods.append(MatrixOperation(
             name: NSLocalizedString("Matrix addition", comment: "Matrix addition method name"),
             type: .Addition))
-        methods.append(MatrixMethod(
+        methods.append(MatrixOperation(
             name: NSLocalizedString("Subtraction of matrices", comment: "Matrix substruct name"),
             type: .Subtract))
-        methods.append(MatrixMethod(
+        methods.append(MatrixOperation(
             name: NSLocalizedString("Matrix multiplication", comment: "Matrix multiplication name"),
             type: .Multiply))
-        methods.append(MatrixMethod(
+        methods.append(MatrixOperation(
             name: NSLocalizedString("Transpose matrix", comment: "Transpose matrix name"),
             type: .Transpose))
-        methods.append(MatrixMethod(
+        methods.append(MatrixOperation(
             name: NSLocalizedString("Invert matrix", comment: "Invert matrix name"),
             type: .Invert))
-        methods.append(MatrixMethod(
+        methods.append(MatrixOperation(
             name: NSLocalizedString("Matrix determinant", comment: "Matrix determinant name"),
             type: .Determinant))
-        methods.append(MatrixMethod(
+        methods.append(MatrixOperation(
             name: NSLocalizedString("Solve a system of linear equations", comment: "Solve a system of linear equations name"),
             type: .Solve))
-        methods.append(MatrixMethod(
+        methods.append(MatrixOperation(
             name: NSLocalizedString("Solve a system of linear equations", comment: "Solve a system of linear equations with error algorith name"),
             description: NSLocalizedString("Using an iterative error correction algorithm", comment: "Solve a system of linear equations with error algorith detail name"),
             type: .SolveWithErrorCorrection))

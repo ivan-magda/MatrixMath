@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum MatrixMethodType {
+enum MatrixOperationType {
     case Addition
     case Subtract
     case Multiply

@@ -17,17 +17,21 @@ private enum MatrixOperationTableViewCellReuseIdentifier: String {
     case Subtitle = "MatrixOperationDetailTableViewCell"
 }
 
-//-----------------------------------------------------------------
-// MARK: - MatrixMethodsTableViewController: UITableViewController
-//-----------------------------------------------------------------
+private enum SegueIdentifier: String {
+    case ComputeOperation = "ComputeOperation"
+}
 
-class MatrixMethodsTableViewController: UITableViewController {
+//--------------------------------------------------------------------
+// MARK: - MatrixOperationsTableViewController: UITableViewController
+//--------------------------------------------------------------------
+
+class MatrixOperationsTableViewController: UITableViewController {
     
     //------------------------------------------------
     // MARK: Properties
     //------------------------------------------------
     
-    private var methods: [MatrixMethod]!
+    private var methods: [MatrixOperation]!
     
     //------------------------------------------------
     // MARK: View Life Cycle
@@ -36,7 +40,11 @@ class MatrixMethodsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        methods = MatrixMethod.getAllMethods()
+        // Back button without title.
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain,
+                                                                target: nil, action: nil)
+        
+        methods = MatrixOperation.getAllMethods()
         
         var left = MatrixDataType()
         left.append(Array(arrayLiteral: 1, 3, 9, 6))
@@ -127,6 +135,23 @@ class MatrixMethodsTableViewController: UITableViewController {
     }
     
     //------------------------------------------------
+    // MARK: Navigation
+    //------------------------------------------------
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == SegueIdentifier.ComputeOperation.rawValue {
+            guard let operation = sender as? MatrixOperation else {
+                return
+            }
+            
+            print("Select \(operation.name) method")
+            
+            let controller = segue.destinationViewController as! ComputeOperationViewController
+            controller.operationToPerform = operation
+        }
+    }
+    
+    //------------------------------------------------
     // MARK: UITableViewDataSource
     //------------------------------------------------
     
@@ -164,6 +189,8 @@ class MatrixMethodsTableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        performSegueWithIdentifier(SegueIdentifier.ComputeOperation.rawValue,
+                                   sender: methods[indexPath.row])
     }
     
 }
