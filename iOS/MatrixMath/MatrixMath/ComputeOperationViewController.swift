@@ -16,11 +16,16 @@ import ActionSheetPicker_3_0
 private enum Section: Int, CaseCountable {
     
     case MatrixSize = 0
-    case FillMatrix
+    case FillMatrixA
+    case FillMatrixB
     case PerformOperation
     case OperationResult
     
     static let caseCount = Section.countCases()
+    
+    static func fromSectionIndex(section: Int) -> Section {
+        return Section(rawValue: section)!
+    }
     
 }
 
@@ -44,6 +49,7 @@ class ComputeOperationViewController: UIViewController {
     
     private static let minimumMatrixItemWidth: CGFloat = 35.0
     private static let defaultCollectionViewCellHeight: CGFloat = 44.0
+    private static let bottomSectionEdgeInset: CGFloat = 8.0
     
     private var columns = 3
     private var rows = 3
@@ -51,7 +57,7 @@ class ComputeOperationViewController: UIViewController {
     //------------------------------------------------
     // MARK: View Life Cycle
     //------------------------------------------------
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -63,7 +69,7 @@ class ComputeOperationViewController: UIViewController {
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         collectionView.collectionViewLayout.invalidateLayout()
     }
-
+    
 }
 
 //-------------------------------------------------------
@@ -119,10 +125,10 @@ extension ComputeOperationViewController: UICollectionViewDataSource {
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        switch Section(rawValue: section)! {
+        switch Section.fromSectionIndex(section) {
         case .MatrixSize:
             return 2
-        case .FillMatrix:
+        case .FillMatrixA, .FillMatrixB:
             return columns * rows
         default:
             return 0
@@ -131,7 +137,7 @@ extension ComputeOperationViewController: UICollectionViewDataSource {
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         
-        switch Section(rawValue: indexPath.section)! {
+        switch Section.fromSectionIndex(indexPath.section) {
         case .MatrixSize:
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MatrixSizeCollectionViewCell.reuseIdentifier, forIndexPath: indexPath) as! MatrixSizeCollectionViewCell
             
@@ -146,12 +152,29 @@ extension ComputeOperationViewController: UICollectionViewDataSource {
             }
             
             return cell
-        case .FillMatrix:
+        case .FillMatrixA, .FillMatrixB:
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MatrixItemCollectionViewCell.reuseIdentifier, forIndexPath: indexPath) as! MatrixItemCollectionViewCell
             return cell
         default:
             return collectionView.dequeueReusableCellWithReuseIdentifier(MatrixSizeCollectionViewCell.reuseIdentifier, forIndexPath: indexPath) as! MatrixSizeCollectionViewCell
         }
+    }
+    
+    func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView {
+        let headerView = collectionView.dequeueReusableSupplementaryViewOfKind(kind, withReuseIdentifier: MatrixHeaderView.reuseIdentifier, forIndexPath: indexPath) as! MatrixHeaderView
+        
+        let fill = NSLocalizedString("Fill matrix", comment: "Fill matrix header title")
+        
+        switch Section.fromSectionIndex(indexPath.section) {
+        case .FillMatrixA:
+            headerView.headerTitleLabel.text = "\(fill) A"
+        case .FillMatrixB:
+            headerView.headerTitleLabel.text = "\(fill) B"
+        default:
+            break
+        }
+        
+        return headerView
     }
     
 }
@@ -163,18 +186,35 @@ extension ComputeOperationViewController: UICollectionViewDataSource {
 extension ComputeOperationViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        let section = Section(rawValue: indexPath.section)!
+        let section = Section.fromSectionIndex(indexPath.section)
         let layout = collectionViewLayout as! UICollectionViewFlowLayout
         
         return sizeForCollectionViewItemInSection(section, layout: layout)
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
-        if section != 0 {
-            return UIEdgeInsets(top: 16.0, left: 15.0, bottom: 0.0, right: 15.0)
+        guard collectionView.numberOfItemsInSection(section) > 0 else {
+            return UIEdgeInsetsZero
         }
         
-        return UIEdgeInsetsZero
+        let bottom = ComputeOperationViewController.bottomSectionEdgeInset
+        
+        switch Section.fromSectionIndex(section) {
+        case .MatrixSize:
+            return UIEdgeInsets(top: 0.0, left: 0.0, bottom: bottom * 2, right: 0.0)
+        default:
+            return UIEdgeInsets(top: 16.0, left: 15.0, bottom: bottom, right: 15.0)
+        }
+    }
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        switch Section.fromSectionIndex(section) {
+        case .FillMatrixA, .FillMatrixB:
+            return CGSize(width: collectionView.bounds.width,
+                          height: MatrixHeaderView.height)
+        default:
+            return CGSizeZero
+        }
     }
     
 }
