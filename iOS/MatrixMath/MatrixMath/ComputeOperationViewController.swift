@@ -61,18 +61,29 @@ extension ComputeOperationViewController: UICollectionViewDataSource {
         switch Section(rawValue: section)! {
         case .MatrixSize:
             return 2
+        case .FillMatrix:
+            return 6
         default:
             return 0
         }
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MatrixSizeCollectionViewCell.reuseIdentifier, forIndexPath: indexPath) as! MatrixSizeCollectionViewCell
         
-        cell.titleLabel.text = "Title label \(indexPath.row)"
-        cell.sizeLabel.text = "\(arc4random_uniform(UInt32(10)))"
-        
-        return cell
+        switch Section(rawValue: indexPath.section)! {
+        case .MatrixSize:
+            let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MatrixSizeCollectionViewCell.reuseIdentifier, forIndexPath: indexPath) as! MatrixSizeCollectionViewCell
+            
+            cell.titleLabel.text = "Title label \(indexPath.row)"
+            cell.sizeLabel.text = "\(arc4random_uniform(UInt32(10)))"
+            
+            return cell
+        case .FillMatrix:
+            let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MatrixItemCollectionViewCell.reuseIdentifier, forIndexPath: indexPath) as! MatrixItemCollectionViewCell
+            return cell
+        default:
+            return collectionView.dequeueReusableCellWithReuseIdentifier(MatrixSizeCollectionViewCell.reuseIdentifier, forIndexPath: indexPath) as! MatrixSizeCollectionViewCell
+        }
     }
     
 }

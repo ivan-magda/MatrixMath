@@ -13,6 +13,7 @@
 		750FB0251CB6535B008DF5F3 /* ComputeOperationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FB0241CB6535B008DF5F3 /* ComputeOperationViewController.swift */; };
 		750FB0281CB655D2008DF5F3 /* MatrixSizeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FB0271CB655D2008DF5F3 /* MatrixSizeCollectionViewCell.swift */; };
 		750FB02B1CB66487008DF5F3 /* CaseCountable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FB02A1CB66487008DF5F3 /* CaseCountable.swift */; };
+		750FB02D1CB66B33008DF5F3 /* MatrixItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FB02C1CB66B33008DF5F3 /* MatrixItemCollectionViewCell.swift */; };
 		7555A3C81CB55188004C32D3 /* MatrixOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555A3C71CB55188004C32D3 /* MatrixOperation.swift */; };
 		7555A3CA1CB551BF004C32D3 /* MatrixOperationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555A3C91CB551BF004C32D3 /* MatrixOperationType.swift */; };
 		756B66F91CAD27C8002E4B4A /* MatrixMathApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 756B66F81CAD27C8002E4B4A /* MatrixMathApiClient.swift */; };
@@ -57,6 +58,7 @@
 		750FB0241CB6535B008DF5F3 /* ComputeOperationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComputeOperationViewController.swift; sourceTree = "<group>"; };
 		750FB0271CB655D2008DF5F3 /* MatrixSizeCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatrixSizeCollectionViewCell.swift; sourceTree = "<group>"; };
 		750FB02A1CB66487008DF5F3 /* CaseCountable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CaseCountable.swift; sourceTree = "<group>"; };
+		750FB02C1CB66B33008DF5F3 /* MatrixItemCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatrixItemCollectionViewCell.swift; sourceTree = "<group>"; };
 		7555A3C71CB55188004C32D3 /* MatrixOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatrixOperation.swift; sourceTree = "<group>"; };
 		7555A3C91CB551BF004C32D3 /* MatrixOperationType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatrixOperationType.swift; sourceTree = "<group>"; };
 		756B66F81CAD27C8002E4B4A /* MatrixMathApiClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatrixMathApiClient.swift; sourceTree = "<group>"; };
@@ -122,6 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				750FB0271CB655D2008DF5F3 /* MatrixSizeCollectionViewCell.swift */,
+				750FB02C1CB66B33008DF5F3 /* MatrixItemCollectionViewCell.swift */,
 			);
 			name = View;
 			path = ..;
@@ -402,6 +405,7 @@
 				7555A3CA1CB551BF004C32D3 /* MatrixOperationType.swift in Sources */,
 				759C4ADD1CACA4F400CBA070 /* ApiClientResult.swift in Sources */,
 				759C4AD21CACA25600CBA070 /* GCDBlackBox.swift in Sources */,
+				750FB02D1CB66B33008DF5F3 /* MatrixItemCollectionViewCell.swift in Sources */,
 				759C4AA11CAC9F6600CBA070 /* AppDelegate.swift in Sources */,
 				759C4AD61CACA3CF00CBA070 /* JSON.swift in Sources */,
 				759C4ADC1CACA4F400CBA070 /* HttpApiClient.swift in Sources */,

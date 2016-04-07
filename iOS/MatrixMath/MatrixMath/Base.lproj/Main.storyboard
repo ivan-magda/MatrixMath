@@ -83,17 +83,17 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="txy-W5-0Bh">
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" keyboardDismissMode="interactive" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="txy-W5-0Bh">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="BZQ-fa-pUc">
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="8" minimumInteritemSpacing="8" id="BZQ-fa-pUc">
                                     <size key="itemSize" width="320" height="50"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="MatrixSize" id="3Cb-ba-Sp0" customClass="MatrixSizeCollectionViewCell" customModule="MatrixMath" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="MatrixSizeCell" id="3Cb-ba-Sp0" customClass="MatrixSizeCollectionViewCell" customModule="MatrixMath" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="64" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -135,6 +135,31 @@
                                         <connections>
                                             <outlet property="sizeLabel" destination="v6c-z9-ebM" id="hFb-kq-v79"/>
                                             <outlet property="titleLabel" destination="KMV-Db-AxJ" id="b1g-tU-txs"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="MatrixItemCell" id="JiX-vw-s16" customClass="MatrixItemCollectionViewCell" customModule="MatrixMath" customModuleProvider="target">
+                                        <rect key="frame" x="138" y="116" width="44" height="44"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="0.0" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rNE-Oq-pFm">
+                                                    <rect key="frame" x="1" y="7" width="42" height="30"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
+                                                </textField>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <constraints>
+                                            <constraint firstItem="rNE-Oq-pFm" firstAttribute="leading" secondItem="JiX-vw-s16" secondAttribute="leading" constant="1" id="MXo-ve-9le"/>
+                                            <constraint firstItem="rNE-Oq-pFm" firstAttribute="centerY" secondItem="JiX-vw-s16" secondAttribute="centerY" id="T2W-aa-0q7"/>
+                                            <constraint firstAttribute="trailing" secondItem="rNE-Oq-pFm" secondAttribute="trailing" constant="1" id="jzb-M0-SnO"/>
+                                        </constraints>
+                                        <size key="customSize" width="44" height="44"/>
+                                        <connections>
+                                            <outlet property="itemTextField" destination="rNE-Oq-pFm" id="HI5-66-MrN"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>

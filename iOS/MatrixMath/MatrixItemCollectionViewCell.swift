@@ -1,5 +1,5 @@
 //
-//  MatrixSizeCollectionViewCell.swift
+//  MatrixItemCollectionViewCell.swift
 //  MatrixMath
 //
 //  Created by Ivan Magda on 07.04.16.
@@ -9,23 +9,22 @@
 import UIKit
 
 //------------------------------------------------------------
-// MARK: - MatrixSizeCollectionViewCell: UICollectionViewCell
+// MARK: - MatrixItemCollectionViewCell: UICollectionViewCell
 //------------------------------------------------------------
 
-class MatrixSizeCollectionViewCell: UICollectionViewCell {
-    
+class MatrixItemCollectionViewCell: UICollectionViewCell {
+
     //--------------------------------------
     // MARK: Outlets
     //--------------------------------------
     
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var sizeLabel: UILabel!
+    @IBOutlet weak var itemTextField: UITextField!
     
     //--------------------------------------
     // MARK: Properties
     //--------------------------------------
     
     /// Cell reuse identifier.
-    static let reuseIdentifier = "MatrixSizeCell"
+    static let reuseIdentifier = "MatrixItemCell"
     
 }
