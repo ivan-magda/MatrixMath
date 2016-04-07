@@ -86,7 +86,7 @@
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" keyboardDismissMode="interactive" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="txy-W5-0Bh">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="8" minimumInteritemSpacing="8" id="BZQ-fa-pUc">
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="4" id="BZQ-fa-pUc">
                                     <size key="itemSize" width="320" height="50"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
@@ -138,14 +138,14 @@
                                         </connections>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="MatrixItemCell" id="JiX-vw-s16" customClass="MatrixItemCollectionViewCell" customModule="MatrixMath" customModuleProvider="target">
-                                        <rect key="frame" x="138" y="116" width="44" height="44"/>
+                                        <rect key="frame" x="138" y="108" width="44" height="44"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="0.0" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rNE-Oq-pFm">
-                                                    <rect key="frame" x="1" y="7" width="42" height="30"/>
+                                                    <rect key="frame" x="0.0" y="7" width="44" height="30"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
                                                 </textField>
@@ -153,9 +153,9 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                         <constraints>
-                                            <constraint firstItem="rNE-Oq-pFm" firstAttribute="leading" secondItem="JiX-vw-s16" secondAttribute="leading" constant="1" id="MXo-ve-9le"/>
+                                            <constraint firstItem="rNE-Oq-pFm" firstAttribute="leading" secondItem="JiX-vw-s16" secondAttribute="leading" id="MXo-ve-9le"/>
                                             <constraint firstItem="rNE-Oq-pFm" firstAttribute="centerY" secondItem="JiX-vw-s16" secondAttribute="centerY" id="T2W-aa-0q7"/>
-                                            <constraint firstAttribute="trailing" secondItem="rNE-Oq-pFm" secondAttribute="trailing" constant="1" id="jzb-M0-SnO"/>
+                                            <constraint firstAttribute="trailing" secondItem="rNE-Oq-pFm" secondAttribute="trailing" id="jzb-M0-SnO"/>
                                         </constraints>
                                         <size key="customSize" width="44" height="44"/>
                                         <connections>

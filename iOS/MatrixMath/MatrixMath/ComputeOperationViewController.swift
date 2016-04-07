@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ActionSheetPicker_3_0
 
 //----------------------------------------------------------
 // MARK: Types
@@ -41,7 +42,7 @@ class ComputeOperationViewController: UIViewController {
     
     var operationToPerform: MatrixOperation!
     
-    private static let minimumMatrixItemWidth: CGFloat = 42.0
+    private static let minimumMatrixItemWidth: CGFloat = 35.0
     private static let defaultCollectionViewCellHeight: CGFloat = 44.0
     
     private var columns = 3
@@ -176,8 +177,48 @@ extension ComputeOperationViewController: UICollectionViewDelegateFlowLayout {
         return UIEdgeInsetsZero
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
-        return 8.0
+}
+
+//------------------------------------------------------------------
+// MARK: - ComputeOperationViewController: UICollectionViewDelegate
+//------------------------------------------------------------------
+
+extension ComputeOperationViewController: UICollectionViewDelegate {
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        if indexPath.section == 0 {
+            func selectNumberOfColumns(indexPath: NSIndexPath) -> Bool {
+                return indexPath.row == 0
+            }
+            
+            let selectedCell = collectionView.cellForItemAtIndexPath(indexPath) as! MatrixSizeCollectionViewCell
+            
+            let title = selectedCell.titleLabel.text!
+            let rows:[Int] = Array(1...7)
+            let initialSelection = (selectNumberOfColumns(indexPath) == true ? columns - 1
+                : self.rows - 1)
+            
+            ActionSheetStringPicker.showPickerWithTitle(title,
+                                                        rows: rows,
+                                                        initialSelection: initialSelection,
+                                                        doneBlock: { [weak self] (picker, selectedIndex, selectedValue) in
+                                                            let value = selectedValue as! Int
+                                                            
+                                                            print("Did select value: \(value) at index: \(selectedIndex)")
+                                                            
+                                                            selectedCell.sizeLabel.text = "\(value)"
+                                                            if selectNumberOfColumns(indexPath) {
+                                                                self?.columns = value
+                                                            } else {
+                                                                self?.rows = value
+                                                            }
+                                                            
+                                                            self?.collectionView.reloadData()
+                                                            
+                }, cancelBlock: { picker in
+                    print("User did cancel selection of the size value")
+                }, origin: view)
+        }
     }
     
 }
