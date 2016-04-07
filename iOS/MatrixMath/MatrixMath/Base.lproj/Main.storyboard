@@ -88,7 +88,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="4" id="BZQ-fa-pUc">
                                     <size key="itemSize" width="320" height="50"/>
-                                    <size key="headerReferenceSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="320" height="50"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
@@ -160,6 +160,34 @@
                                         <size key="customSize" width="44" height="44"/>
                                         <connections>
                                             <outlet property="itemTextField" destination="rNE-Oq-pFm" id="HI5-66-MrN"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ComputeOperationCell" id="2fn-r3-2kC" customClass="ComputeOperationCollectionViewCell" customModule="MatrixMath" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="202" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TG5-LC-gvJ" customClass="BorderedButton" customModule="MatrixMath" customModuleProvider="target">
+                                                    <rect key="frame" x="15" y="4" width="290" height="35"/>
+                                                    <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="19"/>
+                                                    <state key="normal" title="Compute">
+                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                </button>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <constraints>
+                                            <constraint firstItem="TG5-LC-gvJ" firstAttribute="leading" secondItem="2fn-r3-2kC" secondAttribute="leading" constant="15" id="6MK-mX-JKL"/>
+                                            <constraint firstItem="TG5-LC-gvJ" firstAttribute="centerY" secondItem="2fn-r3-2kC" secondAttribute="centerY" id="KU4-ex-bqs"/>
+                                            <constraint firstAttribute="trailing" secondItem="TG5-LC-gvJ" secondAttribute="trailing" constant="15" id="e93-n3-VPY"/>
+                                        </constraints>
+                                        <size key="customSize" width="320" height="44"/>
+                                        <connections>
+                                            <outlet property="computeButton" destination="TG5-LC-gvJ" id="I7w-ya-l8Y"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>

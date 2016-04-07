@@ -18,7 +18,7 @@ private enum Section: Int, CaseCountable {
     case MatrixSize = 0
     case FillMatrixA
     case FillMatrixB
-    case PerformOperation
+    case ComputeOperation
     case OperationResult
     
     static let caseCount = Section.countCases()
@@ -49,7 +49,8 @@ class ComputeOperationViewController: UIViewController {
     
     private static let minimumMatrixItemWidth: CGFloat = 35.0
     private static let defaultCollectionViewCellHeight: CGFloat = 44.0
-    private static let bottomSectionEdgeInset: CGFloat = 8.0
+    private static let sectionVerticalEdgeInset: CGFloat = 8.0
+    private static let sectionHorizontalEdgeInset: CGFloat = 15.0
     
     private var columns = 3
     private var rows = 3
@@ -70,6 +71,14 @@ class ComputeOperationViewController: UIViewController {
         collectionView.collectionViewLayout.invalidateLayout()
     }
     
+    //------------------------------------------------
+    // MARK: Actions
+    //------------------------------------------------
+    
+    func computeOperation() {
+        print("Compute operation did selected")
+    }
+    
 }
 
 //-------------------------------------------------------
@@ -82,11 +91,11 @@ extension ComputeOperationViewController {
         let screenWidth = screenSize().width
         
         switch section {
-        case .MatrixSize:
+        case .FillMatrixA, .FillMatrixB:
+            return sizeForMatrixItemAtIndex(section.rawValue, layout: layout)
+        default:
             return CGSize(width: screenWidth,
                           height: ComputeOperationViewController.defaultCollectionViewCellHeight)
-        default:
-            return sizeForMatrixItemAtIndex(section.rawValue, layout: layout)
         }
     }
     
@@ -105,8 +114,6 @@ extension ComputeOperationViewController {
         if width < ComputeOperationViewController.minimumMatrixItemWidth {
             width = ComputeOperationViewController.minimumMatrixItemWidth
         }
-        
-        debugPrint("Matrix item width = \(width)")
         
         return CGSize(width: width,
                       height: ComputeOperationViewController.defaultCollectionViewCellHeight)
@@ -130,6 +137,8 @@ extension ComputeOperationViewController: UICollectionViewDataSource {
             return 2
         case .FillMatrixA, .FillMatrixB:
             return columns * rows
+        case .ComputeOperation:
+            return 1
         default:
             return 0
         }
@@ -154,6 +163,11 @@ extension ComputeOperationViewController: UICollectionViewDataSource {
             return cell
         case .FillMatrixA, .FillMatrixB:
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MatrixItemCollectionViewCell.reuseIdentifier, forIndexPath: indexPath) as! MatrixItemCollectionViewCell
+            return cell
+        case .ComputeOperation:
+            let cell = collectionView.dequeueReusableCellWithReuseIdentifier(ComputeOperationCollectionViewCell.reuseIdentifier, forIndexPath: indexPath) as! ComputeOperationCollectionViewCell
+            cell.computeButton.addTarget(self, action: #selector(computeOperation), forControlEvents: .TouchUpInside)
+            
             return cell
         default:
             return collectionView.dequeueReusableCellWithReuseIdentifier(MatrixSizeCollectionViewCell.reuseIdentifier, forIndexPath: indexPath) as! MatrixSizeCollectionViewCell
@@ -197,13 +211,20 @@ extension ComputeOperationViewController: UICollectionViewDelegateFlowLayout {
             return UIEdgeInsetsZero
         }
         
-        let bottom = ComputeOperationViewController.bottomSectionEdgeInset
+        let verticalInset = ComputeOperationViewController.sectionVerticalEdgeInset
+        let horizontalInset = ComputeOperationViewController.sectionHorizontalEdgeInset
         
         switch Section.fromSectionIndex(section) {
-        case .MatrixSize:
-            return UIEdgeInsets(top: 0.0, left: 0.0, bottom: bottom * 2, right: 0.0)
+        case .MatrixSize, .ComputeOperation:
+            return UIEdgeInsets(top: 0.0,
+                                left: 0.0,
+                                bottom: verticalInset * 2.0,
+                                right: 0.0)
         default:
-            return UIEdgeInsets(top: 16.0, left: 15.0, bottom: bottom, right: 15.0)
+            return UIEdgeInsets(top: verticalInset,
+                                left: 15.0,
+                                bottom: verticalInset,
+                                right: horizontalInset)
         }
     }
     
@@ -226,7 +247,10 @@ extension ComputeOperationViewController: UICollectionViewDelegateFlowLayout {
 extension ComputeOperationViewController: UICollectionViewDelegate {
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        if indexPath.section == 0 {
+        switch Section.fromSectionIndex(indexPath.section) {
+        case .ComputeOperation:
+            computeOperation()
+        case .MatrixSize:
             func selectNumberOfColumns(indexPath: NSIndexPath) -> Bool {
                 return indexPath.row == 0
             }
@@ -258,6 +282,8 @@ extension ComputeOperationViewController: UICollectionViewDelegate {
                 }, cancelBlock: { picker in
                     print("User did cancel selection of the size value")
                 }, origin: view)
+        default:
+            break
         }
     }
     
