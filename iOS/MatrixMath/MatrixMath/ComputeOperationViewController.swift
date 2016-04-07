@@ -9,6 +9,19 @@
 import UIKit
 
 //----------------------------------------------------------
+// MARK: Types
+//----------------------------------------------------------
+
+private enum Section: Int, CaseCountable {
+    case MatrixSize = 0
+    case FillMatrix
+    case PerformOperation
+    case OperationResult
+    
+    static let caseCount = Section.countCases()
+}
+
+//----------------------------------------------------------
 // MARK: - ComputeOperationViewController: UIViewController
 //----------------------------------------------------------
 
@@ -41,11 +54,16 @@ class ComputeOperationViewController: UIViewController {
 extension ComputeOperationViewController: UICollectionViewDataSource {
     
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
-        return 1
+        return Section.countCases()
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 2
+        switch Section(rawValue: section)! {
+        case .MatrixSize:
+            return 2
+        default:
+            return 0
+        }
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
