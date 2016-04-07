@@ -11,10 +11,10 @@
 		750905B71CB018FC00BF8EF8 /* Matrix+JSONParselable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750905B61CB018FC00BF8EF8 /* Matrix+JSONParselable.swift */; };
 		750905B91CB0192400BF8EF8 /* JSONParselable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750905B81CB0192400BF8EF8 /* JSONParselable.swift */; };
 		750FB0251CB6535B008DF5F3 /* ComputeOperationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FB0241CB6535B008DF5F3 /* ComputeOperationViewController.swift */; };
-		750FB0281CB655D2008DF5F3 /* MatrixSizeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FB0271CB655D2008DF5F3 /* MatrixSizeCollectionViewCell.swift */; };
 		750FB02B1CB66487008DF5F3 /* CaseCountable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FB02A1CB66487008DF5F3 /* CaseCountable.swift */; };
-		750FB02D1CB66B33008DF5F3 /* MatrixItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FB02C1CB66B33008DF5F3 /* MatrixItemCollectionViewCell.swift */; };
 		750FB0311CB69AD8008DF5F3 /* UIUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FB0301CB69AD8008DF5F3 /* UIUtility.swift */; };
+		750FB0341CB6BB5F008DF5F3 /* MatrixItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FB0321CB6BB5F008DF5F3 /* MatrixItemCollectionViewCell.swift */; };
+		750FB0351CB6BB5F008DF5F3 /* MatrixSizeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FB0331CB6BB5F008DF5F3 /* MatrixSizeCollectionViewCell.swift */; };
 		7555A3C81CB55188004C32D3 /* MatrixOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555A3C71CB55188004C32D3 /* MatrixOperation.swift */; };
 		7555A3CA1CB551BF004C32D3 /* MatrixOperationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555A3C91CB551BF004C32D3 /* MatrixOperationType.swift */; };
 		756B66F91CAD27C8002E4B4A /* MatrixMathApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 756B66F81CAD27C8002E4B4A /* MatrixMathApiClient.swift */; };
@@ -32,6 +32,7 @@
 		759C4ADD1CACA4F400CBA070 /* ApiClientResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759C4ADB1CACA4F400CBA070 /* ApiClientResult.swift */; };
 		759C4AE01CACA5A300CBA070 /* JsonApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759C4ADF1CACA5A300CBA070 /* JsonApiClient.swift */; };
 		759C4AE21CACA79C00CBA070 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759C4AE11CACA79C00CBA070 /* Constants.swift */; };
+		A8BDDD82A37665BE3B131BE6 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF41C4A7C404BCE2F56BAE60 /* Pods.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,15 +53,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5EDCF3674C2ED7F4B53C3E4E /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		750905AF1CAFFC2200BF8EF8 /* Matrix.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Matrix.swift; sourceTree = "<group>"; };
 		750905B61CB018FC00BF8EF8 /* Matrix+JSONParselable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Matrix+JSONParselable.swift"; sourceTree = "<group>"; };
 		750905B81CB0192400BF8EF8 /* JSONParselable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONParselable.swift; sourceTree = "<group>"; };
 		750FB0231CB64CDA008DF5F3 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		750FB0241CB6535B008DF5F3 /* ComputeOperationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComputeOperationViewController.swift; sourceTree = "<group>"; };
-		750FB0271CB655D2008DF5F3 /* MatrixSizeCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatrixSizeCollectionViewCell.swift; sourceTree = "<group>"; };
 		750FB02A1CB66487008DF5F3 /* CaseCountable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CaseCountable.swift; sourceTree = "<group>"; };
-		750FB02C1CB66B33008DF5F3 /* MatrixItemCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatrixItemCollectionViewCell.swift; sourceTree = "<group>"; };
 		750FB0301CB69AD8008DF5F3 /* UIUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIUtility.swift; sourceTree = "<group>"; };
+		750FB0321CB6BB5F008DF5F3 /* MatrixItemCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MatrixItemCollectionViewCell.swift; path = MatrixMath/MatrixItemCollectionViewCell.swift; sourceTree = "<group>"; };
+		750FB0331CB6BB5F008DF5F3 /* MatrixSizeCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MatrixSizeCollectionViewCell.swift; path = MatrixMath/MatrixSizeCollectionViewCell.swift; sourceTree = "<group>"; };
 		7555A3C71CB55188004C32D3 /* MatrixOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatrixOperation.swift; sourceTree = "<group>"; };
 		7555A3C91CB551BF004C32D3 /* MatrixOperationType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatrixOperationType.swift; sourceTree = "<group>"; };
 		756B66F81CAD27C8002E4B4A /* MatrixMathApiClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatrixMathApiClient.swift; sourceTree = "<group>"; };
@@ -84,6 +86,8 @@
 		759C4ADB1CACA4F400CBA070 /* ApiClientResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiClientResult.swift; sourceTree = "<group>"; };
 		759C4ADF1CACA5A300CBA070 /* JsonApiClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JsonApiClient.swift; sourceTree = "<group>"; };
 		759C4AE11CACA79C00CBA070 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		DF310BF176CB8BDD11E83499 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		EF41C4A7C404BCE2F56BAE60 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +95,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A8BDDD82A37665BE3B131BE6 /* Pods.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -111,6 +116,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		090160645E9EE30A7A05A00F /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				5EDCF3674C2ED7F4B53C3E4E /* Pods.debug.xcconfig */,
+				DF310BF176CB8BDD11E83499 /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		750905B31CB001F200BF8EF8 /* Matrix */ = {
 			isa = PBXGroup;
 			children = (
@@ -125,8 +139,8 @@
 		750FB0261CB655A4008DF5F3 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				750FB0271CB655D2008DF5F3 /* MatrixSizeCollectionViewCell.swift */,
-				750FB02C1CB66B33008DF5F3 /* MatrixItemCollectionViewCell.swift */,
+				750FB0321CB6BB5F008DF5F3 /* MatrixItemCollectionViewCell.swift */,
+				750FB0331CB6BB5F008DF5F3 /* MatrixSizeCollectionViewCell.swift */,
 			);
 			name = View;
 			path = ..;
@@ -159,6 +173,8 @@
 				759C4AB41CAC9F6600CBA070 /* MatrixMathTests */,
 				759C4ABF1CAC9F6600CBA070 /* MatrixMathUITests */,
 				759C4A9E1CAC9F6500CBA070 /* Products */,
+				090160645E9EE30A7A05A00F /* Pods */,
+				F88088D462E216A0A2E499CF /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -269,6 +285,14 @@
 			name = API;
 			sourceTree = "<group>";
 		};
+		F88088D462E216A0A2E499CF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EF41C4A7C404BCE2F56BAE60 /* Pods.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -276,9 +300,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 759C4AC51CAC9F6600CBA070 /* Build configuration list for PBXNativeTarget "MatrixMath" */;
 			buildPhases = (
+				ACD264636CE189919077B1C1 /* Check Pods Manifest.lock */,
 				759C4A991CAC9F6500CBA070 /* Sources */,
 				759C4A9A1CAC9F6500CBA070 /* Frameworks */,
 				759C4A9B1CAC9F6500CBA070 /* Resources */,
+				B5D5EC00972B23CFC56E7FAA /* Embed Pods Frameworks */,
+				A9FA03CB74E5DA6536C7EDA4 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -396,11 +423,60 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		A9FA03CB74E5DA6536C7EDA4 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		ACD264636CE189919077B1C1 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		B5D5EC00972B23CFC56E7FAA /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		759C4A991CAC9F6500CBA070 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				750FB0351CB6BB5F008DF5F3 /* MatrixSizeCollectionViewCell.swift in Sources */,
 				750FB0311CB69AD8008DF5F3 /* UIUtility.swift in Sources */,
 				750905B91CB0192400BF8EF8 /* JSONParselable.swift in Sources */,
 				759C4AA31CAC9F6600CBA070 /* MatrixOperationsTableViewController.swift in Sources */,
@@ -408,8 +484,8 @@
 				7555A3C81CB55188004C32D3 /* MatrixOperation.swift in Sources */,
 				7555A3CA1CB551BF004C32D3 /* MatrixOperationType.swift in Sources */,
 				759C4ADD1CACA4F400CBA070 /* ApiClientResult.swift in Sources */,
+				750FB0341CB6BB5F008DF5F3 /* MatrixItemCollectionViewCell.swift in Sources */,
 				759C4AD21CACA25600CBA070 /* GCDBlackBox.swift in Sources */,
-				750FB02D1CB66B33008DF5F3 /* MatrixItemCollectionViewCell.swift in Sources */,
 				759C4AA11CAC9F6600CBA070 /* AppDelegate.swift in Sources */,
 				759C4AD61CACA3CF00CBA070 /* JSON.swift in Sources */,
 				759C4ADC1CACA4F400CBA070 /* HttpApiClient.swift in Sources */,
@@ -417,7 +493,6 @@
 				750FB02B1CB66487008DF5F3 /* CaseCountable.swift in Sources */,
 				750905B01CAFFC2200BF8EF8 /* Matrix.swift in Sources */,
 				750FB0251CB6535B008DF5F3 /* ComputeOperationViewController.swift in Sources */,
-				750FB0281CB655D2008DF5F3 /* MatrixSizeCollectionViewCell.swift in Sources */,
 				756B66FC1CAD291B002E4B4A /* MatrixMathConstants.swift in Sources */,
 				756B66F91CAD27C8002E4B4A /* MatrixMathApiClient.swift in Sources */,
 				759C4AE21CACA79C00CBA070 /* Constants.swift in Sources */,
@@ -561,6 +636,7 @@
 		};
 		759C4AC61CAC9F6600CBA070 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5EDCF3674C2ED7F4B53C3E4E /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = MatrixMath/Info.plist;
@@ -572,6 +648,7 @@
 		};
 		759C4AC71CAC9F6600CBA070 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DF310BF176CB8BDD11E83499 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = MatrixMath/Info.plist;
