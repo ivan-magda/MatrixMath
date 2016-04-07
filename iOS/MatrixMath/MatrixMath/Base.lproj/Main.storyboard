@@ -178,6 +178,9 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Compute Operation" id="xPj-cx-Ea1"/>
+                    <connections>
+                        <outlet property="collectionView" destination="txy-W5-0Bh" id="dY8-xy-piO"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Sbq-ME-Bwf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

@@ -19,7 +19,7 @@ extension MatrixMathApiClient {
         
         // MARK: URLs
         static let ApiScheme = "http"
-        static let ApiHost = "192.168.10.2"
+        static let ApiHost = "192.168.10.3"
         static let ApiPath = "/~ivanmagda/matrix/api"
     }
     
