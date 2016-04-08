@@ -64,6 +64,9 @@ class ComputeOperationViewController: UIViewController {
     
     private var matrixDimention: MatrixDimention!
     
+    private var lhsMatrixArray: [Double]!
+    private var rhsMatrixArray: [Double]!
+    
     //------------------------------------------------
     // MARK: View Life Cycle
     //------------------------------------------------
@@ -74,6 +77,7 @@ class ComputeOperationViewController: UIViewController {
         assert(operationToPerform != nil, "Operation to perform must be passed")
         
         title = operationToPerform.name
+        
         matrixDimention = MatrixDimention(columns: 3, rows: 3)
     }
     
@@ -86,7 +90,19 @@ class ComputeOperationViewController: UIViewController {
     //------------------------------------------------
     
     func computeOperation() {
-        print("Compute operation did selected")
+    }
+    
+    //------------------------------------------------
+    // MARK: Helpers
+    //------------------------------------------------
+    
+    private func initMatrices() {
+        func baseMatrix() -> [Double] {
+            return [Double](count: matrixDimention.count(), repeatedValue: 0.0)
+        }
+        
+        lhsMatrixArray = baseMatrix()
+        rhsMatrixArray = baseMatrix()
     }
     
 }
@@ -174,6 +190,7 @@ extension ComputeOperationViewController: UICollectionViewDataSource {
             return cell
         case .FillMatrixA, .FillMatrixB:
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MatrixItemCollectionViewCell.reuseIdentifier, forIndexPath: indexPath) as! MatrixItemCollectionViewCell
+            cell.itemTextField.delegate = self
             return cell
         case .ComputeOperation:
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier(ComputeOperationCollectionViewCell.reuseIdentifier, forIndexPath: indexPath) as! ComputeOperationCollectionViewCell
@@ -251,6 +268,14 @@ extension ComputeOperationViewController: UICollectionViewDelegateFlowLayout {
 
 extension ComputeOperationViewController: UICollectionViewDelegate {
     
+    func collectionView(collectionView: UICollectionView, didEndDisplayingCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+        guard cell.isKindOfClass(MatrixItemCollectionViewCell) == true else {
+            return
+        }
+        
+        print("Did end displaying item cell for section: \(indexPath.section), row: \(indexPath.row)")
+    }
+    
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         switch Section.fromIndex(indexPath.section) {
         case .ComputeOperation:
@@ -285,6 +310,7 @@ extension ComputeOperationViewController: UICollectionViewDelegate {
                         rows: value)
                 }
                 
+                self?.initMatrices()
                 self?.collectionView.reloadData()
                 
                 }, cancelBlock: { picker in
@@ -293,6 +319,24 @@ extension ComputeOperationViewController: UICollectionViewDelegate {
         default:
             break
         }
+    }
+    
+}
+
+//-------------------------------------------------------------
+// MARK: - ComputeOperationViewController: UITextFieldDelegate
+//-------------------------------------------------------------
+
+extension ComputeOperationViewController: UITextFieldDelegate {
+    
+    func textFieldDidEndEditing(textField: UITextField) {
+        let cell = textField.superview!.superview as! MatrixItemCollectionViewCell
+        
+        guard let indexPath = collectionView.indexPathForCell(cell) else {
+            return
+        }
+        
+        print("Did end editing at section: \(indexPath.section), row: \(indexPath.row)")
     }
     
 }

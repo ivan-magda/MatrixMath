@@ -20,10 +20,6 @@ class MatrixItemCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var itemTextField: UITextField!
     
-    //--------------------------------------
-    // MARK: Properties
-    //--------------------------------------
-    
     /// Cell reuse identifier.
     static let reuseIdentifier = "MatrixItemCell"
     

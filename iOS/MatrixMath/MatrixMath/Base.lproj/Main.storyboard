@@ -170,7 +170,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TG5-LC-gvJ" customClass="BorderedButton" customModule="MatrixMath" customModuleProvider="target">
-                                                    <rect key="frame" x="15" y="4" width="290" height="35"/>
+                                                    <rect key="frame" x="15" y="4" width="297" height="35"/>
                                                     <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="19"/>
                                                     <state key="normal" title="Compute">
@@ -181,9 +181,9 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                         <constraints>
-                                            <constraint firstItem="TG5-LC-gvJ" firstAttribute="leading" secondItem="2fn-r3-2kC" secondAttribute="leading" constant="15" id="6MK-mX-JKL"/>
-                                            <constraint firstItem="TG5-LC-gvJ" firstAttribute="centerY" secondItem="2fn-r3-2kC" secondAttribute="centerY" id="KU4-ex-bqs"/>
-                                            <constraint firstAttribute="trailing" secondItem="TG5-LC-gvJ" secondAttribute="trailing" constant="15" id="e93-n3-VPY"/>
+                                            <constraint firstItem="TG5-LC-gvJ" firstAttribute="leading" secondItem="2fn-r3-2kC" secondAttribute="leadingMargin" constant="7" id="OMX-pK-I3h"/>
+                                            <constraint firstItem="TG5-LC-gvJ" firstAttribute="centerY" secondItem="2fn-r3-2kC" secondAttribute="centerY" id="iNW-nE-J9V"/>
+                                            <constraint firstAttribute="trailingMargin" secondItem="TG5-LC-gvJ" secondAttribute="trailing" id="oxo-XX-AWS"/>
                                         </constraints>
                                         <size key="customSize" width="320" height="44"/>
                                         <connections>
