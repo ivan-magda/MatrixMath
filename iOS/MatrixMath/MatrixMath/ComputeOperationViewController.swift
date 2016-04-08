@@ -42,21 +42,6 @@ private struct DefaultSectionInset {
 }
 
 //----------------------------------------------------------
-// MARK: MatrixDimention
-//----------------------------------------------------------
-
-private struct MatrixDimention {
-    
-    var columns: Int
-    var rows: Int
-    
-    func count() -> Int {
-        return columns * rows
-    }
-    
-}
-
-//----------------------------------------------------------
 // MARK: - ComputeOperationViewController: UIViewController
 //----------------------------------------------------------
 

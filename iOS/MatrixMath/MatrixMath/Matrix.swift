@@ -31,4 +31,25 @@ struct Matrix {
         self.data = data
     }
     
+    init?(data: Array<Double>, dimention: MatrixDimention) {
+        guard data.count == dimention.count()
+            && data.count > 0
+            && dimention.nonZero() else {
+            return nil
+        }
+        
+        var array = MatrixDataType()
+        for columnIdx in 0..<dimention.columns {
+            var elemIdx = columnIdx * dimention.rows
+            var elements = [Double]()
+            for _ in 0..<dimention.rows {
+                elements.append(data[elemIdx])
+                elemIdx += 1
+            }
+            array.append(elements)
+        }
+        
+        self.data = array
+    }
+    
 }
