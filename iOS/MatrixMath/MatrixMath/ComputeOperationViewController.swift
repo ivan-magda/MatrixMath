@@ -10,7 +10,8 @@ import UIKit
 import ActionSheetPicker_3_0
 
 //----------------------------------------------------------
-// MARK: Types
+// MARK: Types -
+// MARK: Section: Int, CaseCountable
 //----------------------------------------------------------
 
 private enum Section: Int, CaseCountable {
@@ -23,8 +24,34 @@ private enum Section: Int, CaseCountable {
     
     static let caseCount = Section.countCases()
     
-    static func fromSectionIndex(section: Int) -> Section {
+    static func fromIndex(section: Int) -> Section {
         return Section(rawValue: section)!
+    }
+    
+}
+
+//----------------------------------------------------------
+// MARK: DefaultSectionInset
+//----------------------------------------------------------
+
+private struct DefaultSectionInset {
+    static let top: CGFloat = 8.0
+    static let left: CGFloat = 15.0
+    static let bottom: CGFloat = 8.0
+    static let right: CGFloat = 8.0
+}
+
+//----------------------------------------------------------
+// MARK: MatrixDimention
+//----------------------------------------------------------
+
+private struct MatrixDimention {
+    
+    var columns: Int
+    var rows: Int
+    
+    func count() -> Int {
+        return columns * rows
     }
     
 }
@@ -49,11 +76,8 @@ class ComputeOperationViewController: UIViewController {
     
     private static let minimumMatrixItemWidth: CGFloat = 35.0
     private static let defaultCollectionViewCellHeight: CGFloat = 44.0
-    private static let sectionVerticalEdgeInset: CGFloat = 8.0
-    private static let sectionHorizontalEdgeInset: CGFloat = 15.0
     
-    private var columns = 3
-    private var rows = 3
+    private var matrixDimention: MatrixDimention!
     
     //------------------------------------------------
     // MARK: View Life Cycle
@@ -65,6 +89,7 @@ class ComputeOperationViewController: UIViewController {
         assert(operationToPerform != nil, "Operation to perform must be passed")
         
         title = operationToPerform.name
+        matrixDimention = MatrixDimention(columns: 3, rows: 3)
     }
     
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
@@ -87,8 +112,9 @@ class ComputeOperationViewController: UIViewController {
 
 extension ComputeOperationViewController {
     
-    private func sizeForCollectionViewItemInSection(section: Section, layout: UICollectionViewFlowLayout) -> CGSize {
+    private func sizeForCollectionViewItemInSection(section: Section) -> CGSize {
         let screenWidth = screenSize().width
+        let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
         
         switch section {
         case .FillMatrixA, .FillMatrixB:
@@ -107,9 +133,9 @@ extension ComputeOperationViewController {
         let minimumInteritemSpacing = layout.minimumInteritemSpacing
         
         let remainingWidth = screenWidth - (sectionInset.left + sectionInset.right
-            + CGFloat((rows - 1)) * minimumInteritemSpacing)
+            + CGFloat((matrixDimention.rows - 1)) * minimumInteritemSpacing)
         
-        var width = floor(remainingWidth / CGFloat(rows))
+        var width = floor(remainingWidth / CGFloat(matrixDimention.rows))
         
         if width < ComputeOperationViewController.minimumMatrixItemWidth {
             width = ComputeOperationViewController.minimumMatrixItemWidth
@@ -132,11 +158,11 @@ extension ComputeOperationViewController: UICollectionViewDataSource {
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        switch Section.fromSectionIndex(section) {
+        switch Section.fromIndex(section) {
         case .MatrixSize:
             return 2
         case .FillMatrixA, .FillMatrixB:
-            return columns * rows
+            return matrixDimention.count()
         case .ComputeOperation:
             return 1
         default:
@@ -146,18 +172,18 @@ extension ComputeOperationViewController: UICollectionViewDataSource {
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         
-        switch Section.fromSectionIndex(indexPath.section) {
+        switch Section.fromIndex(indexPath.section) {
         case .MatrixSize:
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MatrixSizeCollectionViewCell.reuseIdentifier, forIndexPath: indexPath) as! MatrixSizeCollectionViewCell
             
             if indexPath.row == 0 {
                 cell.titleLabel.text = NSLocalizedString("Number of columns",
                                                          comment: "Number of columns title")
-                cell.sizeLabel.text = "\(columns)"
+                cell.sizeLabel.text = "\(matrixDimention.columns)"
             } else {
                 cell.titleLabel.text = NSLocalizedString("Number of rows",
                                                          comment: "Number of rows title")
-                cell.sizeLabel.text = "\(rows)"
+                cell.sizeLabel.text = "\(matrixDimention.rows)"
             }
             
             return cell
@@ -179,7 +205,7 @@ extension ComputeOperationViewController: UICollectionViewDataSource {
         
         let fill = NSLocalizedString("Fill matrix", comment: "Fill matrix header title")
         
-        switch Section.fromSectionIndex(indexPath.section) {
+        switch Section.fromIndex(indexPath.section) {
         case .FillMatrixA:
             headerView.headerTitleLabel.text = "\(fill) A"
         case .FillMatrixB:
@@ -200,10 +226,7 @@ extension ComputeOperationViewController: UICollectionViewDataSource {
 extension ComputeOperationViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        let section = Section.fromSectionIndex(indexPath.section)
-        let layout = collectionViewLayout as! UICollectionViewFlowLayout
-        
-        return sizeForCollectionViewItemInSection(section, layout: layout)
+        return sizeForCollectionViewItemInSection(Section.fromIndex(indexPath.section))
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
@@ -211,25 +234,22 @@ extension ComputeOperationViewController: UICollectionViewDelegateFlowLayout {
             return UIEdgeInsetsZero
         }
         
-        let verticalInset = ComputeOperationViewController.sectionVerticalEdgeInset
-        let horizontalInset = ComputeOperationViewController.sectionHorizontalEdgeInset
-        
-        switch Section.fromSectionIndex(section) {
+        switch Section.fromIndex(section) {
         case .MatrixSize, .ComputeOperation:
             return UIEdgeInsets(top: 0.0,
                                 left: 0.0,
-                                bottom: verticalInset * 2.0,
+                                bottom: DefaultSectionInset.top * 2.0,
                                 right: 0.0)
         default:
-            return UIEdgeInsets(top: verticalInset,
-                                left: 15.0,
-                                bottom: verticalInset,
-                                right: horizontalInset)
+            return UIEdgeInsets(top: DefaultSectionInset.top,
+                                left: DefaultSectionInset.left,
+                                bottom: DefaultSectionInset.bottom,
+                                right: DefaultSectionInset.right)
         }
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        switch Section.fromSectionIndex(section) {
+        switch Section.fromIndex(section) {
         case .FillMatrixA, .FillMatrixB:
             return CGSize(width: collectionView.bounds.width,
                           height: MatrixHeaderView.height)
@@ -247,7 +267,7 @@ extension ComputeOperationViewController: UICollectionViewDelegateFlowLayout {
 extension ComputeOperationViewController: UICollectionViewDelegate {
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        switch Section.fromSectionIndex(indexPath.section) {
+        switch Section.fromIndex(indexPath.section) {
         case .ComputeOperation:
             computeOperation()
         case .MatrixSize:
@@ -259,26 +279,29 @@ extension ComputeOperationViewController: UICollectionViewDelegate {
             
             let title = selectedCell.titleLabel.text!
             let rows:[Int] = Array(1...7)
-            let initialSelection = (selectNumberOfColumns(indexPath) == true ? columns - 1
-                : self.rows - 1)
+            let initialSelection = (selectNumberOfColumns(indexPath) == true
+                ? matrixDimention.columns - 1
+                : matrixDimention.rows - 1)
             
-            ActionSheetStringPicker.showPickerWithTitle(title,
-                                                        rows: rows,
-                                                        initialSelection: initialSelection,
-                                                        doneBlock: { [weak self] (picker, selectedIndex, selectedValue) in
-                                                            let value = selectedValue as! Int
-                                                            
-                                                            print("Did select value: \(value) at index: \(selectedIndex)")
-                                                            
-                                                            selectedCell.sizeLabel.text = "\(value)"
-                                                            if selectNumberOfColumns(indexPath) {
-                                                                self?.columns = value
-                                                            } else {
-                                                                self?.rows = value
-                                                            }
-                                                            
-                                                            self?.collectionView.reloadData()
-                                                            
+            ActionSheetStringPicker.showPickerWithTitle(title, rows: rows, initialSelection: initialSelection, doneBlock: { [weak self] (picker, selectedIndex, selectedValue) in
+                let value = selectedValue as! Int
+                
+                print("Did select value: \(value) at index: \(selectedIndex)")
+                
+                selectedCell.sizeLabel.text = "\(value)"
+                
+                let oRows = self?.matrixDimention.rows
+                let oColumns = self?.matrixDimention.columns
+                if selectNumberOfColumns(indexPath) {
+                    self?.matrixDimention = MatrixDimention(columns: value,
+                        rows: oRows!)
+                } else {
+                    self?.matrixDimention = MatrixDimention(columns: oColumns!,
+                        rows: value)
+                }
+                
+                self?.collectionView.reloadData()
+                
                 }, cancelBlock: { picker in
                     print("User did cancel selection of the size value")
                 }, origin: view)
