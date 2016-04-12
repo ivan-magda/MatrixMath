@@ -147,7 +147,7 @@
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="0.0" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rNE-Oq-pFm">
                                                     <rect key="frame" x="0.0" y="7" width="44" height="30"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
+                                                    <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                                                 </textField>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -170,7 +170,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TG5-LC-gvJ" customClass="BorderedButton" customModule="MatrixMath" customModuleProvider="target">
-                                                    <rect key="frame" x="15" y="4" width="297" height="35"/>
+                                                    <rect key="frame" x="15" y="0.0" width="297" height="44"/>
                                                     <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="19"/>
                                                     <state key="normal" title="Compute">
@@ -181,7 +181,9 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                         <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="TG5-LC-gvJ" secondAttribute="bottom" id="3CE-wA-KbP"/>
                                             <constraint firstItem="TG5-LC-gvJ" firstAttribute="leading" secondItem="2fn-r3-2kC" secondAttribute="leadingMargin" constant="7" id="OMX-pK-I3h"/>
+                                            <constraint firstItem="TG5-LC-gvJ" firstAttribute="top" secondItem="2fn-r3-2kC" secondAttribute="top" id="QR9-Bv-Dl4"/>
                                             <constraint firstItem="TG5-LC-gvJ" firstAttribute="centerY" secondItem="2fn-r3-2kC" secondAttribute="centerY" id="iNW-nE-J9V"/>
                                             <constraint firstAttribute="trailingMargin" secondItem="TG5-LC-gvJ" secondAttribute="trailing" id="oxo-XX-AWS"/>
                                         </constraints>

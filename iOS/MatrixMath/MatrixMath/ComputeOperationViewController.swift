@@ -41,9 +41,9 @@ private struct DefaultSectionInset {
     static let right: CGFloat = 8.0
 }
 
-//----------------------------------------------------------
-// MARK: - ComputeOperationViewController: UIViewController
-//----------------------------------------------------------
+//-----------------------------------------------------------
+// MARK: - ComputeOperationViewController: UIViewController -
+//-----------------------------------------------------------
 
 class ComputeOperationViewController: UIViewController {
     
@@ -54,46 +54,56 @@ class ComputeOperationViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     
     //------------------------------------------------
-    // MARK: Properties
+    // MARK: - Properties
     //------------------------------------------------
     
     var operationToPerform: MatrixOperation!
-    
-    private static let minimumMatrixItemWidth: CGFloat = 35.0
-    private static let defaultCollectionViewCellHeight: CGFloat = 44.0
     
     private var matrixDimention: MatrixDimention!
     
     private var lhsMatrixArray: [Double]!
     private var rhsMatrixArray: [Double]!
     
+    private lazy var numberFormatter: NSNumberFormatter = {
+        let numberFormatter = NSNumberFormatter()
+        numberFormatter.numberStyle = .DecimalStyle
+        
+        return numberFormatter
+    }()
+    
     //------------------------------------------------
-    // MARK: View Life Cycle
+    // MARK: UI
+    //------------------------------------------------
+    
+    private static let minimumMatrixItemWidth: CGFloat = 35.0
+    private static let defaultCollectionViewCellHeight: CGFloat = 44.0
+    private static let computeButtonHeight: CGFloat = 44.0
+    
+    //------------------------------------------------
+    // MARK: - View Life Cycle
     //------------------------------------------------
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         assert(operationToPerform != nil, "Operation to perform must be passed")
         
-        title = operationToPerform.name
-        
-        matrixDimention = MatrixDimention(columns: 3, rows: 3)
+        configureUI()
     }
     
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         collectionView.collectionViewLayout.invalidateLayout()
+        print("Content size: \(collectionView.contentSize)")
     }
     
     //------------------------------------------------
-    // MARK: Actions
+    // MARK: - Actions
     //------------------------------------------------
     
     func computeOperation() {
     }
     
     //------------------------------------------------
-    // MARK: Helpers
+    // MARK: - Helpers
     //------------------------------------------------
     
     private func initMatrices() {
@@ -105,13 +115,59 @@ class ComputeOperationViewController: UIViewController {
         rhsMatrixArray = baseMatrix()
     }
     
+    private func updateMatrixItemArrayItemFromText(text: String?, andIndexPath indexPath: NSIndexPath) {
+        func setValue(number: Double) {
+            switch Section.fromIndex(indexPath.section) {
+            case .FillMatrixA:
+                lhsMatrixArray[indexPath.row] = number
+            case .FillMatrixB:
+                rhsMatrixArray[indexPath.row] = number
+            default:
+                print("Undefined index path section")
+                break
+            }
+        }
+        
+        guard isMatrixItemInputCorrect(text) == true else {
+            setValue(0.0)
+            return
+        }
+        
+        setValue(numberFromText(text))
+    }
+    
+    private func isMatrixItemInputCorrect(text: String?) -> Bool {
+        return (text != nil && numberFormatter.numberFromString(text!) != nil)
+    }
+    
+    private func numberFromText(text: String?) -> Double {
+        guard isMatrixItemInputCorrect(text) == true else {
+            return 0.0
+        }
+        
+        return numberFormatter.numberFromString(text!)!.doubleValue
+    }
+    
 }
 
-//-------------------------------------------------------
-// MARK: - ComputeOperationViewController (UI Functions)
-//-------------------------------------------------------
+//--------------------------------------------------------
+// MARK: - ComputeOperationViewController (UI Functions) -
+//--------------------------------------------------------
 
 extension ComputeOperationViewController {
+    
+    private func configureUI() {
+        title = operationToPerform.name
+        
+        matrixDimention = MatrixDimention(columns: 3, rows: 3)
+        initMatrices()
+    }
+    
+    private func presentAlertWithTitle(title: String, message: String?) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: nil))
+        presentViewController(alert, animated: true, completion: nil)
+    }
     
     private func sizeForCollectionViewItemInSection(section: Section) -> CGSize {
         let screenWidth = screenSize().width
@@ -120,6 +176,8 @@ extension ComputeOperationViewController {
         switch section {
         case .FillMatrixA, .FillMatrixB:
             return sizeForMatrixItemAtIndex(section.rawValue, layout: layout)
+        case .ComputeOperation:
+            return CGSize(width: screenWidth, height: ComputeOperationViewController.computeButtonHeight)
         default:
             return CGSize(width: screenWidth,
                           height: ComputeOperationViewController.defaultCollectionViewCellHeight)
@@ -148,9 +206,9 @@ extension ComputeOperationViewController {
     
 }
 
-//--------------------------------------------------------------------
-// MARK: - ComputeOperationViewController: UICollectionViewDataSource
-//--------------------------------------------------------------------
+//---------------------------------------------------------------------
+// MARK: - ComputeOperationViewController: UICollectionViewDataSource -
+//---------------------------------------------------------------------
 
 extension ComputeOperationViewController: UICollectionViewDataSource {
     
@@ -221,9 +279,9 @@ extension ComputeOperationViewController: UICollectionViewDataSource {
     
 }
 
-//----------------------------------------------------------------------------
-// MARK: - ComputeOperationViewController: UICollectionViewDelegateFlowLayout
-//----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+// MARK: - ComputeOperationViewController: UICollectionViewDelegateFlowLayout -
+//-----------------------------------------------------------------------------
 
 extension ComputeOperationViewController: UICollectionViewDelegateFlowLayout {
     
@@ -262,19 +320,20 @@ extension ComputeOperationViewController: UICollectionViewDelegateFlowLayout {
     
 }
 
-//------------------------------------------------------------------
-// MARK: - ComputeOperationViewController: UICollectionViewDelegate
-//------------------------------------------------------------------
+//-------------------------------------------------------------------
+// MARK: - ComputeOperationViewController: UICollectionViewDelegate -
+//-------------------------------------------------------------------
 
 extension ComputeOperationViewController: UICollectionViewDelegate {
     
-    func collectionView(collectionView: UICollectionView, didEndDisplayingCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-        guard cell.isKindOfClass(MatrixItemCollectionViewCell) == true else {
-            return
-        }
-        
-        print("Did end displaying item cell for section: \(indexPath.section), row: \(indexPath.row)")
-    }
+//    func collectionView(collectionView: UICollectionView, didEndDisplayingCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+//        guard let matrixItemCell = cell as? MatrixItemCollectionViewCell else {
+//            return
+//        }
+//        print("Did end displaying item cell for section: \(indexPath.section), row: \(indexPath.row)")
+//        
+//        updateMatrixItemArrayItemFromText(matrixItemCell.itemTextField.text, andIndexPath: indexPath)
+//    }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         switch Section.fromIndex(indexPath.section) {
@@ -316,6 +375,9 @@ extension ComputeOperationViewController: UICollectionViewDelegate {
                 }, cancelBlock: { picker in
                     print("User did cancel selection of the size value")
                 }, origin: view)
+        case .FillMatrixA, .FillMatrixB:
+            let cell = collectionView.cellForItemAtIndexPath(indexPath) as! MatrixItemCollectionViewCell
+            cell.itemTextField.becomeFirstResponder()
         default:
             break
         }
@@ -323,11 +385,24 @@ extension ComputeOperationViewController: UICollectionViewDelegate {
     
 }
 
-//-------------------------------------------------------------
-// MARK: - ComputeOperationViewController: UITextFieldDelegate
-//-------------------------------------------------------------
+//--------------------------------------------------------------
+// MARK: - ComputeOperationViewController: UITextFieldDelegate -
+//--------------------------------------------------------------
 
 extension ComputeOperationViewController: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        if isMatrixItemInputCorrect(textField.text) {
+            textField.resignFirstResponder()
+            return true
+        } else {
+            presentAlertWithTitle(
+                NSLocalizedString("Incorrect input",comment: "Incorrect input title"), message:
+                NSLocalizedString("Pleasy enter valid data", comment: "incorrect input message")
+            )
+            return false
+        }
+    }
     
     func textFieldDidEndEditing(textField: UITextField) {
         let cell = textField.superview!.superview as! MatrixItemCollectionViewCell
@@ -336,7 +411,11 @@ extension ComputeOperationViewController: UITextFieldDelegate {
             return
         }
         
+        updateMatrixItemArrayItemFromText(textField.text, andIndexPath: indexPath)
+        
         print("Did end editing at section: \(indexPath.section), row: \(indexPath.row)")
+        
+        print("Size: \(collectionView.contentSize)")
     }
     
 }
