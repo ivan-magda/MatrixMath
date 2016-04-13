@@ -72,6 +72,10 @@ class ComputeOperationViewController: UIViewController {
     private var keyboardOnScreen = false
     private var isFillMatrixBTextFieldActive = false
     
+    private lazy var matrixItemTextFieldInputAccessoryView: MatrixItemTextFieldInputAccessoryView = {
+        return MatrixItemTextFieldInputAccessoryView.loadView()
+    }()
+    
     //------------------------------------------------
     // MARK: UI
     //------------------------------------------------
@@ -413,6 +417,14 @@ extension ComputeOperationViewController: UITextFieldDelegate {
     
     func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
         isFillMatrixBTextFieldActive = textField.tag == Section.FillMatrixB.rawValue
+        
+        matrixItemTextFieldInputAccessoryView.parentTextField = textField
+        matrixItemTextFieldInputAccessoryView.doneButton.addTarget(
+            self,
+            action: #selector(ComputeOperationViewController.matrixItemTextFieldAccessoryViewDidDone),
+            forControlEvents: .TouchUpInside)
+        textField.inputAccessoryView = matrixItemTextFieldInputAccessoryView
+        
         return true
     }
     
@@ -430,17 +442,11 @@ extension ComputeOperationViewController: UITextFieldDelegate {
     }
     
     func textFieldDidEndEditing(textField: UITextField) {
-        let cell = textField.superview!.superview as! MatrixItemCollectionViewCell
-        
-        guard let indexPath = collectionView.indexPathForCell(cell) else {
+        guard let cell = textField.superview?.superview as? MatrixItemCollectionViewCell,
+            let indexPath = collectionView.indexPathForCell(cell) else {
             return
         }
-        
         updateMatrixItemArrayItemFromText(textField.text, andIndexPath: indexPath)
-        
-        print("Did end editing at section: \(indexPath.section), row: \(indexPath.row)")
-        
-        print("Size: \(collectionView.contentSize)")
     }
     
     //----------------------------------------------
@@ -495,6 +501,15 @@ extension ComputeOperationViewController: UITextFieldDelegate {
         let userInfo = notification.userInfo
         let keyboardSize = userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue
         return keyboardSize.CGRectValue().height
+    }
+    
+    //----------------------------------------------
+    // MARK: Input Accessory View
+    //----------------------------------------------
+    
+    func matrixItemTextFieldAccessoryViewDidDone() {
+        let textField = matrixItemTextFieldInputAccessoryView.parentTextField
+        textField.delegate?.textFieldShouldReturn?(textField)
     }
     
 }

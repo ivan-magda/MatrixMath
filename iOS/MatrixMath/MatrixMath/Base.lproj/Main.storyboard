@@ -107,13 +107,13 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v6c-z9-ebM">
-                                                    <rect key="frame" x="294" y="11" width="11" height="21"/>
+                                                    <rect key="frame" x="301" y="11" width="11" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2gw-Cg-cIC" userLabel="Separator View">
-                                                    <rect key="frame" x="15" y="43" width="305" height="1"/>
+                                                    <rect key="frame" x="15" y="43" width="297" height="1"/>
                                                     <color key="backgroundColor" red="0.78431372549019607" green="0.7803921568627451" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="0.5" id="nFC-Zz-wbZ"/>
@@ -123,13 +123,13 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                         <constraints>
-                                            <constraint firstAttribute="trailing" secondItem="2gw-Cg-cIC" secondAttribute="trailing" id="6kG-fD-CXL"/>
+                                            <constraint firstAttribute="trailing" secondItem="2gw-Cg-cIC" secondAttribute="trailing" constant="8" id="6kG-fD-CXL"/>
                                             <constraint firstItem="v6c-z9-ebM" firstAttribute="centerY" secondItem="3Cb-ba-Sp0" secondAttribute="centerY" id="OB8-UZ-PYg"/>
                                             <constraint firstItem="KMV-Db-AxJ" firstAttribute="leading" secondItem="3Cb-ba-Sp0" secondAttribute="leading" constant="15" id="Pcg-QH-iij"/>
                                             <constraint firstAttribute="bottom" secondItem="2gw-Cg-cIC" secondAttribute="bottom" id="bKG-qB-gdo"/>
                                             <constraint firstItem="2gw-Cg-cIC" firstAttribute="leading" secondItem="3Cb-ba-Sp0" secondAttribute="leading" constant="15" id="gGO-SW-kFu"/>
                                             <constraint firstItem="KMV-Db-AxJ" firstAttribute="centerY" secondItem="3Cb-ba-Sp0" secondAttribute="centerY" id="teF-ya-Rk0"/>
-                                            <constraint firstAttribute="trailing" secondItem="v6c-z9-ebM" secondAttribute="trailing" constant="15" id="xk6-Nz-aJ1"/>
+                                            <constraint firstAttribute="trailing" secondItem="v6c-z9-ebM" secondAttribute="trailing" constant="8" id="xk6-Nz-aJ1"/>
                                         </constraints>
                                         <size key="customSize" width="320" height="44"/>
                                         <connections>
@@ -147,7 +147,7 @@
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="0.0" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rNE-Oq-pFm">
                                                     <rect key="frame" x="0.0" y="7" width="44" height="30"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <textInputTraits key="textInputTraits" autocorrectionType="no"/>
+                                                    <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="decimalPad"/>
                                                 </textField>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>

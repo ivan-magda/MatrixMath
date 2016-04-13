@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="MatrixItemTextFieldInputAccessoryView" customModule="MatrixMath" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zqP-NY-b3U">
+                    <rect key="frame" x="259" y="6" width="41" height="33"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <state key="normal" title="Done"/>
+                </button>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oLa-Qm-sZK" userLabel="TopSeparatorView">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="1"/>
+                    <color key="backgroundColor" red="0.78431372549019607" green="0.7803921568627451" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="0.5" id="6eu-MN-aag"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pzK-Mg-vFq" userLabel="BottomSeparatorView">
+                    <rect key="frame" x="0.0" y="43" width="320" height="1"/>
+                    <color key="backgroundColor" red="0.78431372549019607" green="0.7803921568627451" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="0.5" id="vdj-Yz-bdk"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="zqP-NY-b3U" secondAttribute="trailing" constant="20" symbolic="YES" id="551-uT-cH5"/>
+                <constraint firstAttribute="trailing" secondItem="oLa-Qm-sZK" secondAttribute="trailing" id="78J-WE-w1O"/>
+                <constraint firstItem="zqP-NY-b3U" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="FJC-9Q-LaI"/>
+                <constraint firstItem="oLa-Qm-sZK" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="GmU-zf-7Gt"/>
+                <constraint firstAttribute="trailing" secondItem="pzK-Mg-vFq" secondAttribute="trailing" id="Hkb-Xv-PMr"/>
+                <constraint firstItem="oLa-Qm-sZK" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="np7-UF-X6y"/>
+                <constraint firstItem="pzK-Mg-vFq" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="qCd-Sw-xzU"/>
+                <constraint firstAttribute="bottom" secondItem="pzK-Mg-vFq" secondAttribute="bottom" id="yZg-sj-dL4"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="doneButton" destination="zqP-NY-b3U" id="Va5-IH-3aU"/>
+            </connections>
+        </view>
+    </objects>
+</document>
