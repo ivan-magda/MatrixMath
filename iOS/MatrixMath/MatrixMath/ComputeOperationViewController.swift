@@ -57,7 +57,8 @@ class ComputeOperationViewController: UIViewController {
     
     var operationToPerform: MatrixOperation!
     
-    private var matrixDimention: MatrixDimention!
+    private var lhsMatrixDimention: MatrixDimention!
+    private var rhsMatrixDimention: MatrixDimention!
     
     private var lhsMatrixArray: [Double]!
     private var rhsMatrixArray: [Double]!
@@ -77,7 +78,7 @@ class ComputeOperationViewController: UIViewController {
     }()
     
     //------------------------------------------------
-    // MARK: UI
+    // MARK: UI Constants
     //------------------------------------------------
     
     private static let minimumMatrixItemWidth: CGFloat = 35.0
@@ -92,7 +93,7 @@ class ComputeOperationViewController: UIViewController {
         super.viewDidLoad()
         assert(operationToPerform != nil, "Operation to perform must be passed")
         
-        configureUI()
+        setup()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -107,7 +108,6 @@ class ComputeOperationViewController: UIViewController {
     
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         collectionView.collectionViewLayout.invalidateLayout()
-        print("Content size: \(collectionView.contentSize)")
     }
     
     //------------------------------------------------
@@ -121,16 +121,30 @@ class ComputeOperationViewController: UIViewController {
     // MARK: - Helpers
     //------------------------------------------------
     
-    private func initMatrices() {
-        func baseMatrix() -> [Double] {
-            return [Double](count: matrixDimention.count(), repeatedValue: 0.0)
+    private func setup() {
+        configureUI()
+        
+        // Configure matrix dimentions and data source.
+        
+        let defaultsMatrixDimention = MatrixDimention(columns: 3, rows: 3)
+        lhsMatrixDimention = defaultsMatrixDimention
+        
+        switch operationToPerform.type {
+        case .Addition, .Subtract, .Multiply:
+            rhsMatrixDimention = defaultsMatrixDimention
+        default:
+            rhsMatrixDimention = MatrixDimention(columns: 0, rows: 0)
         }
         
-        lhsMatrixArray = baseMatrix()
-        rhsMatrixArray = baseMatrix()
+        initMatrices()
     }
     
-    private func updateMatrixItemArrayItemFromText(text: String?, andIndexPath indexPath: NSIndexPath) {
+    private func initMatrices() {
+        lhsMatrixArray = [Double](count: lhsMatrixDimention.count(), repeatedValue: 0.0)
+        rhsMatrixArray = [Double](count: rhsMatrixDimention.count(), repeatedValue: 0.0)
+    }
+    
+    private func updateMatrixItemFromText(text: String?, andIndexPath indexPath: NSIndexPath) {
         func setValue(number: Double) {
             switch Section.fromIndex(indexPath.section) {
             case .FillMatrixA:
@@ -176,9 +190,6 @@ extension ComputeOperationViewController {
         
         let scrollView = collectionView as UIScrollView
         scrollView.contentInset.bottom = EdgeInsets.scrollView.bottom
-        
-        matrixDimention = MatrixDimention(columns: 3, rows: 3)
-        initMatrices()
     }
     
     private func presentAlertWithTitle(title: String, message: String?) {
@@ -193,7 +204,7 @@ extension ComputeOperationViewController {
         
         switch section {
         case .FillMatrixA, .FillMatrixB:
-            return sizeForMatrixItemAtIndex(section.rawValue, layout: layout)
+            return sizeForMatrixItemInSection(section, layout: layout)
         case .ComputeOperation:
             return CGSize(width: screenWidth, height: ComputeOperationViewController.computeButtonHeight)
         default:
@@ -202,17 +213,37 @@ extension ComputeOperationViewController {
         }
     }
     
-    private func sizeForMatrixItemAtIndex(index: Int, layout: UICollectionViewFlowLayout) -> CGSize {
+    private func sizeForMatrixItemInSection(section: Section, layout: UICollectionViewFlowLayout) -> CGSize {
+        guard collectionView.numberOfItemsInSection(section.rawValue) != 0 else {
+            return CGSizeZero
+        }
+        
         let screenWidth = screenSize().width
         
+        // Get number of rows for matrix that we currently layouts.
+        // It may be lhs matrix(when perform binary/unary operation) or
+        // rhs matrix(when perform binary operation).
+        
+        var rows: Int!
+        switch section {
+        case .FillMatrixA:
+            rows = lhsMatrixDimention.rows
+        case .FillMatrixB:
+            rows = rhsMatrixDimention.rows
+        default:
+            break
+        }
+        
+        // Determine size value for the collection item.
+        
         let delegateFlowLayout = collectionView.delegate as! UICollectionViewDelegateFlowLayout
-        let sectionInset = delegateFlowLayout.collectionView!(collectionView, layout: layout, insetForSectionAtIndex: index)
+        let sectionInset = delegateFlowLayout.collectionView!(collectionView, layout: layout, insetForSectionAtIndex: section.rawValue)
         let minimumInteritemSpacing = layout.minimumInteritemSpacing
         
         let remainingWidth = screenWidth - (sectionInset.left + sectionInset.right
-            + CGFloat((matrixDimention.rows - 1)) * minimumInteritemSpacing)
+            + CGFloat((rows - 1)) * minimumInteritemSpacing)
         
-        var width = floor(remainingWidth / CGFloat(matrixDimention.rows))
+        var width = floor(remainingWidth / CGFloat(rows))
         
         if width < ComputeOperationViewController.minimumMatrixItemWidth {
             width = ComputeOperationViewController.minimumMatrixItemWidth
@@ -237,12 +268,26 @@ extension ComputeOperationViewController: UICollectionViewDataSource {
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch Section.fromIndex(section) {
         case .MatrixSize:
-            return 2
-        case .FillMatrixA, .FillMatrixB:
-            return matrixDimention.count()
+            switch operationToPerform.type {
+            case .Solve, .SolveWithErrorCorrection:
+                return 1
+            case .Addition, .Subtract, .Transpose, .Determinant, .Invert:
+                return 2
+            case .Multiply:
+                return 4
+            }
+        case .FillMatrixA:
+            return lhsMatrixDimention.count()
+        case .FillMatrixB:
+            switch operationToPerform.type {
+            case .Addition, .Subtract, .Multiply:
+                return rhsMatrixDimention.count()
+            default:
+                return 0
+            }
         case .ComputeOperation:
             return 1
-        default:
+        case .OperationResult:
             return 0
         }
     }
@@ -254,15 +299,42 @@ extension ComputeOperationViewController: UICollectionViewDataSource {
         case .MatrixSize:
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MatrixSizeCollectionViewCell.reuseIdentifier, forIndexPath: indexPath) as! MatrixSizeCollectionViewCell
             
-            if indexPath.row == 0 {
-                cell.titleLabel.text = NSLocalizedString("Number of columns",
+            let numberOfColumnsTitle = NSLocalizedString("Number of columns",
                                                          comment: "Number of columns title")
-                cell.sizeLabel.text = "\(matrixDimention.columns)"
-            } else {
-                cell.titleLabel.text = NSLocalizedString("Number of rows",
-                                                         comment: "Number of rows title")
-                cell.sizeLabel.text = "\(matrixDimention.rows)"
-            }
+            let numberOfRowsTitle = NSLocalizedString("Number of rows",
+                                                      comment: "Number of rows title")
+            
+            let index = indexPath.row
+            
+             switch operationToPerform.type {
+             case .Solve, .SolveWithErrorCorrection:
+                cell.titleLabel.text = NSLocalizedString("Number of unknowns",
+                                                         comment: "Number of unknowns title")
+                cell.sizeLabel.text = "\(lhsMatrixDimention.rows)"
+             case .Addition, .Subtract, .Transpose, .Determinant, .Invert:
+                cell.titleLabel.text = (index % 2 == 0
+                    ? numberOfColumnsTitle : numberOfRowsTitle)
+                cell.sizeLabel.text  = (index % 2 == 0
+                    ? "\(lhsMatrixDimention.columns)" : "\(lhsMatrixDimention.rows)")
+             case .Multiply:
+                if index < 2 {
+                    let matrixA = NSLocalizedString("of the matrix A", comment: "Matrix A end name")
+                    cell.titleLabel.text = (index % 2 == 0
+                        ? numberOfColumnsTitle + matrixA
+                        : numberOfRowsTitle + matrixA)
+                    cell.sizeLabel.text  = (index % 2 == 0
+                        ? "\(lhsMatrixDimention.columns)"
+                        : "\(lhsMatrixDimention.rows)")
+                } else {
+                    let matrixB = NSLocalizedString("of the matrix B", comment: "Matrix B end name")
+                    cell.titleLabel.text = (index % 2 == 0
+                        ? numberOfColumnsTitle + matrixB
+                        : numberOfRowsTitle + matrixB)
+                    cell.sizeLabel.text  = (index % 2 == 0
+                        ? "\(rhsMatrixDimention.columns)"
+                        : "\(rhsMatrixDimention.rows)")
+                }
+             }
             
             return cell
         case .FillMatrixA, .FillMatrixB:
@@ -359,18 +431,33 @@ extension ComputeOperationViewController: UICollectionViewDelegate {
         switch Section.fromIndex(indexPath.section) {
         case .ComputeOperation:
             computeOperation()
+        case .FillMatrixA, .FillMatrixB:
+            let cell = collectionView.cellForItemAtIndexPath(indexPath) as! MatrixItemCollectionViewCell
+            cell.itemTextField.becomeFirstResponder()
         case .MatrixSize:
-            func selectNumberOfColumns(indexPath: NSIndexPath) -> Bool {
-                return indexPath.row == 0
+            func selectingNumberOfColumns() -> Bool {
+                return indexPath.row % 2 == 0
+            }
+            
+            func isLhsMatrix() -> Bool {
+                return indexPath.row < 2
             }
             
             let selectedCell = collectionView.cellForItemAtIndexPath(indexPath) as! MatrixSizeCollectionViewCell
             
             let title = selectedCell.titleLabel.text!
             let rows:[Int] = Array(1...7)
-            let initialSelection = (selectNumberOfColumns(indexPath) == true
-                ? matrixDimention.columns - 1
-                : matrixDimention.rows - 1)
+            
+            var initialSelection: Int!
+            if selectingNumberOfColumns() {
+                initialSelection = (isLhsMatrix()
+                    ? lhsMatrixDimention.columns - 1
+                    : rhsMatrixDimention.columns - 1)
+            } else {
+                initialSelection = (isLhsMatrix()
+                    ? lhsMatrixDimention.rows - 1
+                    : rhsMatrixDimention.rows - 1)
+            }
             
             ActionSheetStringPicker.showPickerWithTitle(title, rows: rows, initialSelection: initialSelection, doneBlock: { [weak self] (picker, selectedIndex, selectedValue) in
                 let value = selectedValue as! Int
@@ -379,14 +466,27 @@ extension ComputeOperationViewController: UICollectionViewDelegate {
                 
                 selectedCell.sizeLabel.text = "\(value)"
                 
-                let oRows = self?.matrixDimention.rows
-                let oColumns = self?.matrixDimention.columns
-                if selectNumberOfColumns(indexPath) {
-                    self?.matrixDimention = MatrixDimention(columns: value,
-                        rows: oRows!)
+                let oRows = (isLhsMatrix()
+                    ? self?.lhsMatrixDimention.rows
+                    : self?.rhsMatrixDimention.rows)
+                let oColumns = (isLhsMatrix()
+                    ? self?.lhsMatrixDimention.columns
+                    : self?.rhsMatrixDimention.columns)
+                
+                if selectingNumberOfColumns() {
+                    let newDimention = MatrixDimention(columns: value, rows: oRows!)
+                    if isLhsMatrix() {
+                        self?.lhsMatrixDimention = newDimention
+                    } else {
+                        self?.rhsMatrixDimention = newDimention
+                    }
                 } else {
-                    self?.matrixDimention = MatrixDimention(columns: oColumns!,
-                        rows: value)
+                    let newDimention = MatrixDimention(columns: oColumns!, rows: value)
+                    if isLhsMatrix() {
+                        self?.lhsMatrixDimention = newDimention
+                    } else {
+                        self?.rhsMatrixDimention = newDimention
+                    }
                 }
                 
                 self?.initMatrices()
@@ -395,9 +495,6 @@ extension ComputeOperationViewController: UICollectionViewDelegate {
                 }, cancelBlock: { picker in
                     print("User did cancel selection of the size value")
                 }, origin: view)
-        case .FillMatrixA, .FillMatrixB:
-            let cell = collectionView.cellForItemAtIndexPath(indexPath) as! MatrixItemCollectionViewCell
-            cell.itemTextField.becomeFirstResponder()
         default:
             break
         }
@@ -418,10 +515,13 @@ extension ComputeOperationViewController: UITextFieldDelegate {
     func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
         isFillMatrixBTextFieldActive = textField.tag == Section.FillMatrixB.rawValue
         
+        // Add input accessory view to the text field.
+        // It enables to return text field.
+        
         matrixItemTextFieldInputAccessoryView.parentTextField = textField
         matrixItemTextFieldInputAccessoryView.doneButton.addTarget(
             self,
-            action: #selector(ComputeOperationViewController.matrixItemTextFieldAccessoryViewDidDone),
+            action: #selector(ComputeOperationViewController.matrixItemTextFieldDidDoneOnEditing),
             forControlEvents: .TouchUpInside)
         textField.inputAccessoryView = matrixItemTextFieldInputAccessoryView
         
@@ -446,7 +546,16 @@ extension ComputeOperationViewController: UITextFieldDelegate {
             let indexPath = collectionView.indexPathForCell(cell) else {
             return
         }
-        updateMatrixItemArrayItemFromText(textField.text, andIndexPath: indexPath)
+        updateMatrixItemFromText(textField.text, andIndexPath: indexPath)
+    }
+    
+    //----------------------------------------------
+    // MARK: Input Accessory View
+    //----------------------------------------------
+    
+    func matrixItemTextFieldDidDoneOnEditing() {
+        let textField = matrixItemTextFieldInputAccessoryView.parentTextField
+        textField.delegate?.textFieldShouldReturn?(textField)
     }
     
     //----------------------------------------------
@@ -501,15 +610,6 @@ extension ComputeOperationViewController: UITextFieldDelegate {
         let userInfo = notification.userInfo
         let keyboardSize = userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue
         return keyboardSize.CGRectValue().height
-    }
-    
-    //----------------------------------------------
-    // MARK: Input Accessory View
-    //----------------------------------------------
-    
-    func matrixItemTextFieldAccessoryViewDidDone() {
-        let textField = matrixItemTextFieldInputAccessoryView.parentTextField
-        textField.delegate?.textFieldShouldReturn?(textField)
     }
     
 }
