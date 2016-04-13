@@ -132,6 +132,8 @@ class ComputeOperationViewController: UIViewController {
         switch operationToPerform.type {
         case .Addition, .Subtract, .Multiply:
             rhsMatrixDimention = defaultsMatrixDimention
+        case .Solve, .SolveWithErrorCorrection:
+            rhsMatrixDimention = MatrixDimention(columns: 3, rows: 1)
         default:
             rhsMatrixDimention = MatrixDimention(columns: 0, rows: 0)
         }
@@ -282,6 +284,8 @@ extension ComputeOperationViewController: UICollectionViewDataSource {
             switch operationToPerform.type {
             case .Addition, .Subtract, .Multiply:
                 return rhsMatrixDimention.count()
+            case .Solve, .SolveWithErrorCorrection:
+                return rhsMatrixDimention.columns
             default:
                 return 0
             }
@@ -306,17 +310,17 @@ extension ComputeOperationViewController: UICollectionViewDataSource {
             
             let index = indexPath.row
             
-             switch operationToPerform.type {
-             case .Solve, .SolveWithErrorCorrection:
+            switch operationToPerform.type {
+            case .Solve, .SolveWithErrorCorrection:
                 cell.titleLabel.text = NSLocalizedString("Number of unknowns",
                                                          comment: "Number of unknowns title")
                 cell.sizeLabel.text = "\(lhsMatrixDimention.rows)"
-             case .Addition, .Subtract, .Transpose, .Determinant, .Invert:
+            case .Addition, .Subtract, .Transpose, .Determinant, .Invert:
                 cell.titleLabel.text = (index % 2 == 0
                     ? numberOfColumnsTitle : numberOfRowsTitle)
                 cell.sizeLabel.text  = (index % 2 == 0
                     ? "\(lhsMatrixDimention.columns)" : "\(lhsMatrixDimention.rows)")
-             case .Multiply:
+            case .Multiply:
                 if index < 2 {
                     let matrixA = NSLocalizedString("of the matrix A", comment: "Matrix A end name")
                     cell.titleLabel.text = (index % 2 == 0
@@ -334,7 +338,7 @@ extension ComputeOperationViewController: UICollectionViewDataSource {
                         ? "\(rhsMatrixDimention.columns)"
                         : "\(rhsMatrixDimention.rows)")
                 }
-             }
+            }
             
             return cell
         case .FillMatrixA, .FillMatrixB:
@@ -343,6 +347,9 @@ extension ComputeOperationViewController: UICollectionViewDataSource {
             
             if section == .FillMatrixB {
                 cell.itemTextField.tag = Section.FillMatrixB.rawValue
+                cell.itemTextField.text = "\(rhsMatrixArray[indexPath.row])"
+            } else {
+                cell.itemTextField.text = "\(lhsMatrixArray[indexPath.row])"
             }
             
             return cell
@@ -359,18 +366,36 @@ extension ComputeOperationViewController: UICollectionViewDataSource {
     func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView {
         let headerView = collectionView.dequeueReusableSupplementaryViewOfKind(kind, withReuseIdentifier: MatrixHeaderView.reuseIdentifier, forIndexPath: indexPath) as! MatrixHeaderView
         
-        let fill = NSLocalizedString("Fill matrix", comment: "Fill matrix header title")
-        
-        switch Section.fromIndex(indexPath.section) {
-        case .FillMatrixA:
-            headerView.headerTitleLabel.text = "\(fill) A"
-        case .FillMatrixB:
-            headerView.headerTitleLabel.text = "\(fill) B"
+        switch operationToPerform.type {
+        case .Solve, .SolveWithErrorCorrection:
+            switch Section.fromIndex(indexPath.section) {
+            case .FillMatrixA:
+                headerView.headerTitleLabel.text = NSLocalizedString(
+                    "Fill a matrix of coefficients",
+                    comment: "Matrix of coefficients header view title")
+            case .FillMatrixB:
+                headerView.headerTitleLabel.text = NSLocalizedString(
+                    "Fill a vector of values",
+                    comment: "Vector of values header view title")
+            default:
+                break
+            }
+            
+            return headerView
         default:
-            break
+            let fill = NSLocalizedString("Fill matrix", comment: "Fill matrix header title")
+            
+            switch Section.fromIndex(indexPath.section) {
+            case .FillMatrixA:
+                headerView.headerTitleLabel.text = "\(fill) A"
+            case .FillMatrixB:
+                headerView.headerTitleLabel.text = "\(fill) B"
+            default:
+                break
+            }
+            
+            return headerView
         }
-        
-        return headerView
     }
     
 }
@@ -390,6 +415,11 @@ extension ComputeOperationViewController: UICollectionViewDelegateFlowLayout {
             return UIEdgeInsetsZero
         }
         
+        let defaultInset = UIEdgeInsets(top: EdgeInsets.collectionViewSection.top,
+                                        left: EdgeInsets.collectionViewSection.left,
+                                        bottom: EdgeInsets.collectionViewSection.bottom,
+                                        right: EdgeInsets.collectionViewSection.right)
+        
         switch Section.fromIndex(section) {
         case .MatrixSize:
             return UIEdgeInsets(top: 0.0,
@@ -401,11 +431,19 @@ extension ComputeOperationViewController: UICollectionViewDelegateFlowLayout {
                                 left: 0.0,
                                 bottom: EdgeInsets.collectionViewSection.bottom * 2,
                                 right: 0.0)
+        case .FillMatrixB:
+            switch operationToPerform.type {
+            case .Solve, .SolveWithErrorCorrection:
+                let itemWidth = sizeForMatrixItemInSection(Section.FillMatrixA, layout: collectionView.collectionViewLayout as! UICollectionViewFlowLayout).width
+                
+                let margin = floor((screenSize().width - itemWidth) / 2.0)
+                
+                return UIEdgeInsets(top: EdgeInsets.collectionViewSection.top, left: margin, bottom: EdgeInsets.collectionViewSection.bottom, right: margin)
+            default:
+                return defaultInset
+            }
         default:
-            return UIEdgeInsets(top: EdgeInsets.collectionViewSection.top,
-                                left: EdgeInsets.collectionViewSection.left,
-                                bottom: EdgeInsets.collectionViewSection.bottom,
-                                right: EdgeInsets.collectionViewSection.right)
+            return defaultInset
         }
     }
     
@@ -499,6 +537,7 @@ extension ComputeOperationViewController: UICollectionViewDelegate {
             }
         case .Solve, .SolveWithErrorCorrection:
             lhsMatrixDimention = MatrixDimention(columns: value, rows: value)
+            rhsMatrixDimention = MatrixDimention(columns: value, rows: 1)
         }
         
         initMatrices()
@@ -589,7 +628,7 @@ extension ComputeOperationViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(textField: UITextField) {
         guard let cell = textField.superview?.superview as? MatrixItemCollectionViewCell,
             let indexPath = collectionView.indexPathForCell(cell) else {
-            return
+                return
         }
         updateMatrixItemFromText(textField.text, andIndexPath: indexPath)
     }

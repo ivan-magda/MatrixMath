@@ -144,7 +144,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="0.0" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rNE-Oq-pFm">
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="0.0" textAlignment="center" clearsOnBeginEditing="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rNE-Oq-pFm">
                                                     <rect key="frame" x="0.0" y="7" width="44" height="30"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="decimalPad"/>
@@ -153,13 +153,15 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                         <constraints>
-                                            <constraint firstItem="rNE-Oq-pFm" firstAttribute="leading" secondItem="JiX-vw-s16" secondAttribute="leading" id="MXo-ve-9le"/>
+                                            <constraint firstAttribute="trailing" secondItem="rNE-Oq-pFm" secondAttribute="trailing" id="HOE-Gi-wGU"/>
                                             <constraint firstItem="rNE-Oq-pFm" firstAttribute="centerY" secondItem="JiX-vw-s16" secondAttribute="centerY" id="T2W-aa-0q7"/>
-                                            <constraint firstAttribute="trailing" secondItem="rNE-Oq-pFm" secondAttribute="trailing" id="jzb-M0-SnO"/>
+                                            <constraint firstItem="rNE-Oq-pFm" firstAttribute="leading" secondItem="JiX-vw-s16" secondAttribute="leading" id="xoq-He-mZZ"/>
                                         </constraints>
                                         <size key="customSize" width="44" height="44"/>
                                         <connections>
                                             <outlet property="itemTextField" destination="rNE-Oq-pFm" id="HI5-66-MrN"/>
+                                            <outlet property="textFieldLeadingSpaceConstraint" destination="xoq-He-mZZ" id="YXt-x9-lU9"/>
+                                            <outlet property="textFieldTrailingSpaceConstraint" destination="HOE-Gi-wGU" id="jOj-ge-Cnq"/>
                                         </connections>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ComputeOperationCell" id="2fn-r3-2kC" customClass="ComputeOperationCollectionViewCell" customModule="MatrixMath" customModuleProvider="target">

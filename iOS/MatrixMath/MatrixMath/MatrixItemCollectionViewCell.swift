@@ -20,6 +20,13 @@ class MatrixItemCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var itemTextField: UITextField!
     
+    @IBOutlet weak var textFieldLeadingSpaceConstraint: NSLayoutConstraint!
+    @IBOutlet weak var textFieldTrailingSpaceConstraint: NSLayoutConstraint!
+    
+    //--------------------------------------
+    // MARK: Properties
+    //--------------------------------------
+    
     /// Cell reuse identifier.
     static let reuseIdentifier = "MatrixItemCell"
     
