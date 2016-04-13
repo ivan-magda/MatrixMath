@@ -320,16 +320,16 @@ extension ComputeOperationViewController: UICollectionViewDataSource {
                 if index < 2 {
                     let matrixA = NSLocalizedString("of the matrix A", comment: "Matrix A end name")
                     cell.titleLabel.text = (index % 2 == 0
-                        ? numberOfColumnsTitle + matrixA
-                        : numberOfRowsTitle + matrixA)
+                        ? "\(numberOfColumnsTitle) \(matrixA)"
+                        : "\(numberOfRowsTitle) \(matrixA)")
                     cell.sizeLabel.text  = (index % 2 == 0
                         ? "\(lhsMatrixDimention.columns)"
                         : "\(lhsMatrixDimention.rows)")
                 } else {
                     let matrixB = NSLocalizedString("of the matrix B", comment: "Matrix B end name")
                     cell.titleLabel.text = (index % 2 == 0
-                        ? numberOfColumnsTitle + matrixB
-                        : numberOfRowsTitle + matrixB)
+                        ? "\(numberOfColumnsTitle) \(matrixB)"
+                        : "\(numberOfRowsTitle) \(matrixB)")
                     cell.sizeLabel.text  = (index % 2 == 0
                         ? "\(rhsMatrixDimention.columns)"
                         : "\(rhsMatrixDimention.rows)")
@@ -410,6 +410,10 @@ extension ComputeOperationViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        guard collectionView.numberOfItemsInSection(section) > 0 else {
+            return CGSizeZero
+        }
+        
         switch Section.fromIndex(section) {
         case .FillMatrixA, .FillMatrixB:
             return CGSize(width: collectionView.bounds.width,
@@ -427,6 +431,10 @@ extension ComputeOperationViewController: UICollectionViewDelegateFlowLayout {
 
 extension ComputeOperationViewController: UICollectionViewDelegate {
     
+    //------------------------------------------------
+    // MARK: UICollectionViewDelegate
+    //------------------------------------------------
+    
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         switch Section.fromIndex(indexPath.section) {
         case .ComputeOperation:
@@ -435,69 +443,106 @@ extension ComputeOperationViewController: UICollectionViewDelegate {
             let cell = collectionView.cellForItemAtIndexPath(indexPath) as! MatrixItemCollectionViewCell
             cell.itemTextField.becomeFirstResponder()
         case .MatrixSize:
-            func selectingNumberOfColumns() -> Bool {
-                return indexPath.row % 2 == 0
-            }
-            
-            func isLhsMatrix() -> Bool {
-                return indexPath.row < 2
-            }
-            
             let selectedCell = collectionView.cellForItemAtIndexPath(indexPath) as! MatrixSizeCollectionViewCell
             
             let title = selectedCell.titleLabel.text!
             let rows:[Int] = Array(1...7)
             
-            var initialSelection: Int!
-            if selectingNumberOfColumns() {
-                initialSelection = (isLhsMatrix()
-                    ? lhsMatrixDimention.columns - 1
-                    : rhsMatrixDimention.columns - 1)
-            } else {
-                initialSelection = (isLhsMatrix()
-                    ? lhsMatrixDimention.rows - 1
-                    : rhsMatrixDimention.rows - 1)
-            }
+            let initialSelection = initialSelectionValueForActionSheetPickerAtIndexPath(indexPath)
             
             ActionSheetStringPicker.showPickerWithTitle(title, rows: rows, initialSelection: initialSelection, doneBlock: { [weak self] (picker, selectedIndex, selectedValue) in
-                let value = selectedValue as! Int
-                
+                guard let value = selectedValue as? Int else {
+                    return
+                }
                 print("Did select value: \(value) at index: \(selectedIndex)")
                 
                 selectedCell.sizeLabel.text = "\(value)"
-                
-                let oRows = (isLhsMatrix()
-                    ? self?.lhsMatrixDimention.rows
-                    : self?.rhsMatrixDimention.rows)
-                let oColumns = (isLhsMatrix()
-                    ? self?.lhsMatrixDimention.columns
-                    : self?.rhsMatrixDimention.columns)
-                
-                if selectingNumberOfColumns() {
-                    let newDimention = MatrixDimention(columns: value, rows: oRows!)
-                    if isLhsMatrix() {
-                        self?.lhsMatrixDimention = newDimention
-                    } else {
-                        self?.rhsMatrixDimention = newDimention
-                    }
-                } else {
-                    let newDimention = MatrixDimention(columns: oColumns!, rows: value)
-                    if isLhsMatrix() {
-                        self?.lhsMatrixDimention = newDimention
-                    } else {
-                        self?.rhsMatrixDimention = newDimention
-                    }
-                }
-                
-                self?.initMatrices()
-                self?.collectionView.reloadData()
-                
+                self?.updateMatrixDimentionsWithSelectedValue(value, atIndexPath: indexPath)
                 }, cancelBlock: { picker in
                     print("User did cancel selection of the size value")
                 }, origin: view)
         default:
             break
         }
+    }
+    
+    //------------------------------------------------
+    // MARK: Helpers
+    //------------------------------------------------
+    
+    private func updateMatrixDimentionsWithSelectedValue(value: Int, atIndexPath indexPath: NSIndexPath) {
+        func setNewDimention(dimention: MatrixDimention) {
+            lhsMatrixDimention = dimention
+            rhsMatrixDimention = dimention
+        }
+        
+        let newDimention = newMatrixDimentionFromSelectedValue(value, atIndexPath: indexPath)
+        
+        switch operationToPerform.type {
+        case .Addition, .Subtract:
+            setNewDimention(newDimention)
+        case .Determinant, .Invert:
+            setNewDimention(MatrixDimention(columns: value, rows: value))
+        case .Multiply, .Transpose:
+            if isSelectingNumberOfColumnsAtIndexPath(indexPath) {
+                if isLhsMatrixAtIndexPath(indexPath) {
+                    lhsMatrixDimention = newDimention
+                } else {
+                    rhsMatrixDimention = newDimention
+                }
+            } else {
+                if isLhsMatrixAtIndexPath(indexPath) {
+                    lhsMatrixDimention = newDimention
+                } else {
+                    rhsMatrixDimention = newDimention
+                }
+            }
+        case .Solve, .SolveWithErrorCorrection:
+            lhsMatrixDimention = MatrixDimention(columns: value, rows: value)
+        }
+        
+        initMatrices()
+        collectionView.reloadData()
+    }
+    
+    private func initialSelectionValueForActionSheetPickerAtIndexPath(indexPath: NSIndexPath) -> Int {
+        if isSelectingNumberOfColumnsAtIndexPath(indexPath) {
+            return (isLhsMatrixAtIndexPath(indexPath)
+                ? lhsMatrixDimention.columns - 1
+                : rhsMatrixDimention.columns - 1)
+        } else {
+            return (isLhsMatrixAtIndexPath(indexPath)
+                ? lhsMatrixDimention.rows - 1
+                : rhsMatrixDimention.rows - 1)
+        }
+    }
+    
+    private func newMatrixDimentionFromSelectedValue(value: Int, atIndexPath indexPath: NSIndexPath) -> MatrixDimention {
+        let originalDimention = originalMatrixDimentionAtIndexPath(indexPath)
+        if isSelectingNumberOfColumnsAtIndexPath(indexPath) {
+            return MatrixDimention(columns: value, rows: originalDimention.rows)
+        } else {
+            return MatrixDimention(columns: originalDimention.columns, rows: value)
+        }
+    }
+    
+    private func originalMatrixDimentionAtIndexPath(indexPath: NSIndexPath) -> MatrixDimention {
+        let columns = (isLhsMatrixAtIndexPath(indexPath)
+            ? lhsMatrixDimention.columns
+            : rhsMatrixDimention.columns)
+        let rows = (isLhsMatrixAtIndexPath(indexPath)
+            ? lhsMatrixDimention.rows
+            : rhsMatrixDimention.rows)
+        
+        return MatrixDimention(columns: columns, rows: rows)
+    }
+    
+    private func isSelectingNumberOfColumnsAtIndexPath(indexPath: NSIndexPath) -> Bool {
+        return indexPath.row % 2 == 0
+    }
+    
+    private func isLhsMatrixAtIndexPath(indexPath: NSIndexPath) -> Bool {
+        return indexPath.row < 2
     }
     
 }
