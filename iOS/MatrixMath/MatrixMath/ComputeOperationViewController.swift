@@ -31,14 +31,12 @@ private enum Section: Int, CaseCountable {
 }
 
 //----------------------------------------------------------
-// MARK: DefaultSectionInset
+// MARK: EdgeInsets
 //----------------------------------------------------------
 
-private struct DefaultSectionInset {
-    static let top: CGFloat = 8.0
-    static let left: CGFloat = 15.0
-    static let bottom: CGFloat = 8.0
-    static let right: CGFloat = 8.0
+private struct EdgeInsets {
+    static let scrollView = UIEdgeInsets(top: 64.0, left: 0.0, bottom: 22.0, right: 0.0)
+    static let collectionViewSection = UIEdgeInsets(top: 8.0, left: 15.0, bottom: 8.0, right: 8.0)
 }
 
 //-----------------------------------------------------------
@@ -71,6 +69,9 @@ class ComputeOperationViewController: UIViewController {
         return numberFormatter
     }()
     
+    private var keyboardOnScreen = false
+    private var isFillMatrixBTextFieldActive = false
+    
     //------------------------------------------------
     // MARK: UI
     //------------------------------------------------
@@ -88,6 +89,16 @@ class ComputeOperationViewController: UIViewController {
         assert(operationToPerform != nil, "Operation to perform must be passed")
         
         configureUI()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        subscribeToKeyboardNotifications()
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        unsubscribeFromAllNotifications()
     }
     
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
@@ -158,6 +169,9 @@ extension ComputeOperationViewController {
     
     private func configureUI() {
         title = operationToPerform.name
+        
+        let scrollView = collectionView as UIScrollView
+        scrollView.contentInset.bottom = EdgeInsets.scrollView.bottom
         
         matrixDimention = MatrixDimention(columns: 3, rows: 3)
         initMatrices()
@@ -230,8 +244,9 @@ extension ComputeOperationViewController: UICollectionViewDataSource {
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        let section = Section.fromIndex(indexPath.section)
         
-        switch Section.fromIndex(indexPath.section) {
+        switch section {
         case .MatrixSize:
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MatrixSizeCollectionViewCell.reuseIdentifier, forIndexPath: indexPath) as! MatrixSizeCollectionViewCell
             
@@ -249,6 +264,11 @@ extension ComputeOperationViewController: UICollectionViewDataSource {
         case .FillMatrixA, .FillMatrixB:
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MatrixItemCollectionViewCell.reuseIdentifier, forIndexPath: indexPath) as! MatrixItemCollectionViewCell
             cell.itemTextField.delegate = self
+            
+            if section == .FillMatrixB {
+                cell.itemTextField.tag = Section.FillMatrixB.rawValue
+            }
+            
             return cell
         case .ComputeOperation:
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier(ComputeOperationCollectionViewCell.reuseIdentifier, forIndexPath: indexPath) as! ComputeOperationCollectionViewCell
@@ -295,16 +315,21 @@ extension ComputeOperationViewController: UICollectionViewDelegateFlowLayout {
         }
         
         switch Section.fromIndex(section) {
-        case .MatrixSize, .ComputeOperation:
+        case .MatrixSize:
             return UIEdgeInsets(top: 0.0,
                                 left: 0.0,
-                                bottom: DefaultSectionInset.top * 2.0,
+                                bottom: EdgeInsets.collectionViewSection.bottom * 2.0,
+                                right: 0.0)
+        case .ComputeOperation:
+            return UIEdgeInsets(top: EdgeInsets.scrollView.bottom,
+                                left: 0.0,
+                                bottom: EdgeInsets.collectionViewSection.bottom * 2,
                                 right: 0.0)
         default:
-            return UIEdgeInsets(top: DefaultSectionInset.top,
-                                left: DefaultSectionInset.left,
-                                bottom: DefaultSectionInset.bottom,
-                                right: DefaultSectionInset.right)
+            return UIEdgeInsets(top: EdgeInsets.collectionViewSection.top,
+                                left: EdgeInsets.collectionViewSection.left,
+                                bottom: EdgeInsets.collectionViewSection.bottom,
+                                right: EdgeInsets.collectionViewSection.right)
         }
     }
     
@@ -325,15 +350,6 @@ extension ComputeOperationViewController: UICollectionViewDelegateFlowLayout {
 //-------------------------------------------------------------------
 
 extension ComputeOperationViewController: UICollectionViewDelegate {
-    
-//    func collectionView(collectionView: UICollectionView, didEndDisplayingCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-//        guard let matrixItemCell = cell as? MatrixItemCollectionViewCell else {
-//            return
-//        }
-//        print("Did end displaying item cell for section: \(indexPath.section), row: \(indexPath.row)")
-//        
-//        updateMatrixItemArrayItemFromText(matrixItemCell.itemTextField.text, andIndexPath: indexPath)
-//    }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         switch Section.fromIndex(indexPath.section) {
@@ -391,6 +407,15 @@ extension ComputeOperationViewController: UICollectionViewDelegate {
 
 extension ComputeOperationViewController: UITextFieldDelegate {
     
+    //----------------------------------------------
+    // MARK: UITextFieldDelegate
+    //----------------------------------------------
+    
+    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+        isFillMatrixBTextFieldActive = textField.tag == Section.FillMatrixB.rawValue
+        return true
+    }
+    
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         if isMatrixItemInputCorrect(textField.text) {
             textField.resignFirstResponder()
@@ -416,6 +441,91 @@ extension ComputeOperationViewController: UITextFieldDelegate {
         print("Did end editing at section: \(indexPath.section), row: \(indexPath.row)")
         
         print("Size: \(collectionView.contentSize)")
+    }
+    
+    //----------------------------------------------
+    // MARK: Show/Hide Keyboard
+    //----------------------------------------------
+    
+    func keyboardWillShow(notification: NSNotification) {
+        if !keyboardOnScreen && isFillMatrixBTextFieldActive {
+            let info = notification.userInfo!
+            
+            UIView.beginAnimations(nil, context: nil)
+            UIView.setAnimationDuration(info[UIKeyboardAnimationDurationUserInfoKey]!.doubleValue!)
+            UIView.setAnimationCurve(UIViewAnimationCurve(rawValue: info[UIKeyboardAnimationCurveUserInfoKey]!.integerValue!)!)
+            UIView.setAnimationBeginsFromCurrentState(true)
+            
+            let scrollView = collectionView as UIScrollView
+            
+            var insets = EdgeInsets.scrollView
+            insets.bottom += keyboardHeight(notification)
+            scrollView.contentInset = insets
+            scrollView.contentOffset = CGPoint(x: scrollView.contentOffset.x,
+                                               y: scrollView.contentOffset.y + keyboardHeight(notification))
+            
+            UIView.commitAnimations()
+        }
+    }
+    
+    func keyboardWillHide(notification: NSNotification) {
+        if keyboardOnScreen && isFillMatrixBTextFieldActive  {
+            let info = notification.userInfo!
+            UIView.beginAnimations(nil, context: nil)
+            UIView.setAnimationDuration(info[UIKeyboardAnimationDurationUserInfoKey]!.doubleValue!)
+            UIView.setAnimationCurve(UIViewAnimationCurve(rawValue: info[UIKeyboardAnimationCurveUserInfoKey]!.integerValue!)!)
+            UIView.setAnimationBeginsFromCurrentState(true)
+            
+            let scrollView = collectionView as UIScrollView
+            scrollView.contentInset = EdgeInsets.scrollView
+            
+            UIView.commitAnimations()
+        }
+    }
+    
+    func keyboardDidShow(notification: NSNotification) {
+        keyboardOnScreen = true
+    }
+    
+    func keyboardDidHide(notification: NSNotification) {
+        keyboardOnScreen = false
+    }
+    
+    private func keyboardHeight(notification: NSNotification) -> CGFloat {
+        let userInfo = notification.userInfo
+        let keyboardSize = userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue
+        return keyboardSize.CGRectValue().height
+    }
+    
+}
+
+//---------------------------------------------------------
+// MARK: - ComputeOperationViewController (Notifications) -
+//---------------------------------------------------------
+
+extension ComputeOperationViewController {
+    
+    private func subscribeToKeyboardNotifications() {
+        subscribeToNotification(
+            UIKeyboardWillShowNotification,
+            selector: #selector(ComputeOperationViewController.keyboardWillShow(_:)))
+        subscribeToNotification(
+            UIKeyboardWillHideNotification,
+            selector: #selector(ComputeOperationViewController.keyboardWillHide(_:)))
+        subscribeToNotification(
+            UIKeyboardDidShowNotification,
+            selector: #selector(ComputeOperationViewController.keyboardDidShow(_:)))
+        subscribeToNotification(
+            UIKeyboardDidHideNotification,
+            selector: #selector(ComputeOperationViewController.keyboardDidHide(_:)))
+    }
+    
+    private func subscribeToNotification(notification: String, selector: Selector) {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: selector, name: notification, object: nil)
+    }
+    
+    private func unsubscribeFromAllNotifications() {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
 }
