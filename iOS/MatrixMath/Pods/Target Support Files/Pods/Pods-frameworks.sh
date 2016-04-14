@@ -85,7 +85,9 @@ strip_invalid_archs() {
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods/ActionSheetPicker_3_0.framework"
+  install_framework "Pods/SVProgressHUD.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods/ActionSheetPicker_3_0.framework"
+  install_framework "Pods/SVProgressHUD.framework"
 fi

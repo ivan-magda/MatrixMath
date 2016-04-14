@@ -1,10 +1,13 @@
 PODS:
   - ActionSheetPicker-3.0 (2.0.5)
+  - SVProgressHUD (1.1.3)
 
 DEPENDENCIES:
   - ActionSheetPicker-3.0 (~> 2.0.5)
+  - SVProgressHUD (~> 1.1)
 
 SPEC CHECKSUMS:
   ActionSheetPicker-3.0: 8312778b6815578e6a86d630fbcf31dc94c534e7
+  SVProgressHUD: 748080e4f36e603f6c02aec292664239df5279c1
 
 COCOAPODS: 0.39.0
