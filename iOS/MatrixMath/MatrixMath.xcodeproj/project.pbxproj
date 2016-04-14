@@ -22,6 +22,7 @@
 		751F8FD61CBDD0EF0050EC41 /* MatrixItemTextFieldInputAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751F8FD51CBDD0EF0050EC41 /* MatrixItemTextFieldInputAccessoryView.swift */; };
 		751F8FD81CBDD2AE0050EC41 /* UIExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751F8FD71CBDD2AE0050EC41 /* UIExtensions.swift */; };
 		752D4D891CB73885000826FD /* MatrixDimention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752D4D881CB73885000826FD /* MatrixDimention.swift */; };
+		753F44A21CBF7C290074A07E /* MatrixMathApiClient+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753F44A11CBF7C290074A07E /* MatrixMathApiClient+Convenience.swift */; };
 		7555A3C81CB55188004C32D3 /* MatrixOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555A3C71CB55188004C32D3 /* MatrixOperation.swift */; };
 		7555A3CA1CB551BF004C32D3 /* MatrixOperationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555A3C91CB551BF004C32D3 /* MatrixOperationType.swift */; };
 		756B66F91CAD27C8002E4B4A /* MatrixMathApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 756B66F81CAD27C8002E4B4A /* MatrixMathApiClient.swift */; };
@@ -77,6 +78,7 @@
 		751F8FD51CBDD0EF0050EC41 /* MatrixItemTextFieldInputAccessoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatrixItemTextFieldInputAccessoryView.swift; sourceTree = "<group>"; };
 		751F8FD71CBDD2AE0050EC41 /* UIExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIExtensions.swift; sourceTree = "<group>"; };
 		752D4D881CB73885000826FD /* MatrixDimention.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatrixDimention.swift; sourceTree = "<group>"; };
+		753F44A11CBF7C290074A07E /* MatrixMathApiClient+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MatrixMathApiClient+Convenience.swift"; sourceTree = "<group>"; };
 		7555A3C71CB55188004C32D3 /* MatrixOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatrixOperation.swift; sourceTree = "<group>"; };
 		7555A3C91CB551BF004C32D3 /* MatrixOperationType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatrixOperationType.swift; sourceTree = "<group>"; };
 		756B66F81CAD27C8002E4B4A /* MatrixMathApiClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatrixMathApiClient.swift; sourceTree = "<group>"; };
@@ -198,6 +200,7 @@
 			isa = PBXGroup;
 			children = (
 				756B66F81CAD27C8002E4B4A /* MatrixMathApiClient.swift */,
+				753F44A11CBF7C290074A07E /* MatrixMathApiClient+Convenience.swift */,
 				756B66FB1CAD291B002E4B4A /* MatrixMathConstants.swift */,
 			);
 			name = MatrixMathAPI;
@@ -522,6 +525,7 @@
 				759C4AE01CACA5A300CBA070 /* JsonApiClient.swift in Sources */,
 				7555A3C81CB55188004C32D3 /* MatrixOperation.swift in Sources */,
 				7555A3CA1CB551BF004C32D3 /* MatrixOperationType.swift in Sources */,
+				753F44A21CBF7C290074A07E /* MatrixMathApiClient+Convenience.swift in Sources */,
 				759C4ADD1CACA4F400CBA070 /* ApiClientResult.swift in Sources */,
 				750FB0341CB6BB5F008DF5F3 /* MatrixItemCollectionViewCell.swift in Sources */,
 				750FB0371CB6C7BA008DF5F3 /* MatrixHeaderView.swift in Sources */,
