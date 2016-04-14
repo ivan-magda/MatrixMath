@@ -97,6 +97,7 @@ class JsonApiClient: HttpApiClient {
     // MARK: Helpers
     //---------------------------------
     
+    // TODO: Test with determinant method, when matrice elements is 0.
     func deserializeJSONDataWithCompletionHandler(data: NSData, block: (AnyObject?, NSError?) -> Void) {
         var deserializedJSON: AnyObject?
         

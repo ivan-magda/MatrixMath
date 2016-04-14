@@ -14,7 +14,7 @@ import Foundation
 
 extension MatrixMathApiClient {
     
-    func performMatrixOperationWithType(type: MatrixOperationType, matrices: Matrix..., withCompletionHandler completionHandler: MatrixMathMatrixResultBlock) {
+    func performMatrixOperationWithType(type: MatrixOperationType, matrices: [Matrix], withCompletionHandler completionHandler: MatrixMathMatrixResultBlock) {
         func sendError(error: String) {
             let userInfo = [NSLocalizedDescriptionKey: error]
             let error = NSError(domain: MatrixMathApiClient.ErrorDomain,

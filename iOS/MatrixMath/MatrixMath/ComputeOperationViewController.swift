@@ -72,7 +72,6 @@ class ComputeOperationViewController: UIViewController {
     }()
     
     private var keyboardOnScreen = false
-    private var isFillMatrixBTextFieldActive = false
     
     private lazy var matrixItemTextFieldInputAccessoryView: MatrixItemTextFieldInputAccessoryView = {
         return MatrixItemTextFieldInputAccessoryView.loadView()
@@ -117,8 +116,86 @@ class ComputeOperationViewController: UIViewController {
     // MARK: - Actions
     //------------------------------------------------
     
-    func computeOperation() {
+    func performOperation() {
+        func presentAlertWithError(error: NSError) {
+            hideNetworkActivityIndicator()
+            presentAlert(message: error.localizedDescription)
+        }
         
+        func presentEmptyResultAlert() {
+            hideNetworkActivityIndicator()
+            presentAlert(
+                message: NSLocalizedString("An empty result returned",
+                comment: "Empty result error message"))
+        }
+        
+        guard let lhsMatrix = Matrix(data: lhsMatrixArray, dimention: lhsMatrixDimention) else {
+            presentAlert(message: NSLocalizedString("Could't perform operation", comment: "Failed to perfrom operation message"))
+            return
+        }
+        
+        let type = operationToPerform.type
+        switch type {
+        case .Determinant:
+            showNetworkActivityIndicator()
+            apiClient.determinant(matrix: lhsMatrix, completionHandler: { (determinant, error) in
+                performOnMain {
+                    guard error == nil else {
+                        presentAlertWithError(error!)
+                        return
+                    }
+                    
+                    guard determinant != nil else {
+                        presentEmptyResultAlert()
+                        return
+                    }
+                    
+                    hideNetworkActivityIndicator()
+                    print("Determinant = \(determinant!)")
+                }
+            })
+        case .Solve, .SolveWithErrorCorrection:
+            showNetworkActivityIndicator()
+            apiClient.performSolveOperationWithType(type, coefficientsMatrix: lhsMatrix, valuesVector: rhsMatrixArray, completionHandler: { (vector, error) in
+                performOnMain {
+                    guard error == nil else {
+                        presentAlertWithError(error!)
+                        return
+                    }
+                    
+                    guard vector != nil else {
+                        presentEmptyResultAlert()
+                        return
+                    }
+                    
+                    hideNetworkActivityIndicator()
+                    print("Solution vector: \(vector!)")
+                }
+            })
+        default:
+            var matrices = [lhsMatrix]
+            if let rhsMatrix = Matrix(data: rhsMatrixArray, dimention: rhsMatrixDimention) {
+                matrices.append(rhsMatrix)
+            }
+            
+            showNetworkActivityIndicator()
+            apiClient.performMatrixOperationWithType(type, matrices: matrices, withCompletionHandler: { (matrix, error) in
+                performOnMain {
+                    guard error == nil else {
+                        presentAlertWithError(error!)
+                        return
+                    }
+                    
+                    guard matrix != nil else {
+                        presentEmptyResultAlert()
+                        return
+                    }
+                    
+                    hideNetworkActivityIndicator()
+                    print("\(self.operationToPerform.name): \(matrix!.data))")
+                }
+            })
+        }
     }
     
     //------------------------------------------------
@@ -198,7 +275,7 @@ extension ComputeOperationViewController {
         scrollView.contentInset.bottom = EdgeInsets.scrollView.bottom
     }
     
-    private func presentAlertWithTitle(title: String, message: String?) {
+    private func presentAlert(title title: String = NSLocalizedString("Error", comment: "Error"), message: String?) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: nil))
         presentViewController(alert, animated: true, completion: nil)
@@ -359,7 +436,7 @@ extension ComputeOperationViewController: UICollectionViewDataSource {
             return cell
         case .ComputeOperation:
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier(ComputeOperationCollectionViewCell.reuseIdentifier, forIndexPath: indexPath) as! ComputeOperationCollectionViewCell
-            cell.computeButton.addTarget(self, action: #selector(computeOperation), forControlEvents: .TouchUpInside)
+            cell.computeButton.addTarget(self, action: #selector(performOperation), forControlEvents: .TouchUpInside)
             
             return cell
         default:
@@ -480,7 +557,7 @@ extension ComputeOperationViewController: UICollectionViewDelegate {
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         switch Section.fromIndex(indexPath.section) {
         case .ComputeOperation:
-            computeOperation()
+            performOperation()
         case .FillMatrixA, .FillMatrixB:
             let cell = collectionView.cellForItemAtIndexPath(indexPath) as! MatrixItemCollectionViewCell
             cell.itemTextField.becomeFirstResponder()
@@ -601,8 +678,6 @@ extension ComputeOperationViewController: UITextFieldDelegate {
     //----------------------------------------------
     
     func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
-        isFillMatrixBTextFieldActive = textField.tag == Section.FillMatrixB.rawValue
-        
         // Add input accessory view to the text field.
         // It enables to return text field.
         
@@ -621,12 +696,16 @@ extension ComputeOperationViewController: UITextFieldDelegate {
             textField.resignFirstResponder()
             return true
         } else {
-            presentAlertWithTitle(
-                NSLocalizedString("Incorrect input",comment: "Incorrect input title"), message:
-                NSLocalizedString("Pleasy enter valid data", comment: "incorrect input message")
+            presentAlert(
+                title: NSLocalizedString("Incorrect input", comment: "Incorrect input title"),
+                message: NSLocalizedString("Pleasy enter valid data", comment: "incorrect input message")
             )
             return false
         }
+    }
+    
+    func textFieldShouldEndEditing(textField: UITextField) -> Bool {
+        return isMatrixItemInputCorrect(textField.text)
     }
     
     func textFieldDidEndEditing(textField: UITextField) {
@@ -651,7 +730,7 @@ extension ComputeOperationViewController: UITextFieldDelegate {
     //----------------------------------------------
     
     func keyboardWillShow(notification: NSNotification) {
-        if !keyboardOnScreen && isFillMatrixBTextFieldActive {
+        if !keyboardOnScreen {
             let info = notification.userInfo!
             
             UIView.beginAnimations(nil, context: nil)
@@ -672,7 +751,7 @@ extension ComputeOperationViewController: UITextFieldDelegate {
     }
     
     func keyboardWillHide(notification: NSNotification) {
-        if keyboardOnScreen && isFillMatrixBTextFieldActive  {
+        if keyboardOnScreen {
             let info = notification.userInfo!
             UIView.beginAnimations(nil, context: nil)
             UIView.setAnimationDuration(info[UIKeyboardAnimationDurationUserInfoKey]!.doubleValue!)
