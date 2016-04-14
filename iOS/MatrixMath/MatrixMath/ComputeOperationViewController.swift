@@ -8,6 +8,7 @@
 
 import UIKit
 import ActionSheetPicker_3_0
+import SVProgressHUD
 
 //----------------------------------------------------------
 // MARK: Types -
@@ -129,10 +130,18 @@ class ComputeOperationViewController: UIViewController {
                 comment: "Empty result error message"))
         }
         
+        func showSuccess() {
+            hideNetworkActivityIndicator()
+            SVProgressHUD.showSuccessWithStatus(NSLocalizedString("Successfully",
+                comment: "Successfully status"))
+        }
+        
         guard let lhsMatrix = Matrix(data: lhsMatrixArray, dimention: lhsMatrixDimention) else {
             presentAlert(message: NSLocalizedString("Could't perform operation", comment: "Failed to perfrom operation message"))
             return
         }
+        
+        SVProgressHUD.showWithStatus(NSLocalizedString("Computing...", comment: "Computing status"))
         
         let type = operationToPerform.type
         switch type {
@@ -150,7 +159,7 @@ class ComputeOperationViewController: UIViewController {
                         return
                     }
                     
-                    hideNetworkActivityIndicator()
+                    showSuccess()
                     print("Determinant = \(determinant!)")
                 }
             })
@@ -168,7 +177,7 @@ class ComputeOperationViewController: UIViewController {
                         return
                     }
                     
-                    hideNetworkActivityIndicator()
+                    showSuccess()
                     print("Solution vector: \(vector!)")
                 }
             })
@@ -191,7 +200,7 @@ class ComputeOperationViewController: UIViewController {
                         return
                     }
                     
-                    hideNetworkActivityIndicator()
+                    showSuccess()
                     print("\(self.operationToPerform.name): \(matrix!.data))")
                 }
             })
@@ -273,6 +282,9 @@ extension ComputeOperationViewController {
         
         let scrollView = collectionView as UIScrollView
         scrollView.contentInset.bottom = EdgeInsets.scrollView.bottom
+        
+        SVProgressHUD.setForegroundColor(UIColor.whiteColor())
+        SVProgressHUD.setBackgroundColor(UIColor.grayColor())
     }
     
     private func presentAlert(title title: String = NSLocalizedString("Error", comment: "Error"), message: String?) {
