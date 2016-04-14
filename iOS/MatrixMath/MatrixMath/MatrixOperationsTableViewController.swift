@@ -31,6 +31,7 @@ class MatrixOperationsTableViewController: UITableViewController {
     // MARK: Properties
     //------------------------------------------------
     
+    var apiClient: MatrixMathApiClient!
     private var methods: [MatrixOperation]!
     
     //------------------------------------------------
@@ -39,6 +40,8 @@ class MatrixOperationsTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        assert(apiClient != nil, "Api client instance must be instantiated")
         
         // Back button without title.
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain,
@@ -150,6 +153,7 @@ class MatrixOperationsTableViewController: UITableViewController {
             
             let controller = segue.destinationViewController as! ComputeOperationViewController
             controller.operationToPerform = operation
+            controller.apiClient = apiClient
         }
     }
     

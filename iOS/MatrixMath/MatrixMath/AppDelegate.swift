@@ -21,12 +21,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     
+    private let apiClient = MatrixMathApiClient.sharedInstance
+    
     //-----------------------------------------------------
     // MARK: UIApplicationDelegate
     //-----------------------------------------------------
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        setup()
         return true
+    }
+    
+    //-----------------------------------------------------
+    // MARK: Setup
+    //-----------------------------------------------------
+    
+    private func setup() {
+        let navigationController = window!.rootViewController as! UINavigationController
+        
+        let operationsViewController = navigationController.topViewController as! MatrixOperationsTableViewController
+        operationsViewController.apiClient = apiClient
     }
     
 }

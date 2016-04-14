@@ -56,6 +56,7 @@ class ComputeOperationViewController: UIViewController {
     //------------------------------------------------
     
     var operationToPerform: MatrixOperation!
+    var apiClient: MatrixMathApiClient!
     
     private var lhsMatrixDimention: MatrixDimention!
     private var rhsMatrixDimention: MatrixDimention!
@@ -91,7 +92,9 @@ class ComputeOperationViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        assert(operationToPerform != nil, "Operation to perform must be passed")
+        
+        assert(operationToPerform != nil, "Operation to perform be passed when segue to this VC")
+        assert(apiClient != nil, "Api client instance must be passed when segue to this VC")
         
         setup()
     }
@@ -115,6 +118,7 @@ class ComputeOperationViewController: UIViewController {
     //------------------------------------------------
     
     func computeOperation() {
+        
     }
     
     //------------------------------------------------
