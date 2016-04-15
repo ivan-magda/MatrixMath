@@ -122,20 +122,26 @@ class ComputeOperationViewController: UIViewController {
     func performOperation() {
         func presentAlertWithError(error: NSError) {
             hideNetworkActivityIndicator()
+            SVProgressHUD.dismiss()
             presentAlert(message: error.localizedDescription)
         }
         
         func presentEmptyResultAlert() {
             hideNetworkActivityIndicator()
+            SVProgressHUD.dismiss()
             presentAlert(
                 message: NSLocalizedString("An empty result returned",
                 comment: "Empty result error message"))
         }
         
-        func doneWithSuccess() {
+        func doneWithSuccess(result result: [Double], dimension: MatrixDimension) {
+            resultMatrixArray = result
+            resultMatrixDimension = dimension
+            
             hideNetworkActivityIndicator()
             SVProgressHUD.showSuccessWithStatus(NSLocalizedString("Successfully",
                 comment: "Successfully status"))
+            
             collectionView.reloadData()
         }
         
@@ -161,9 +167,10 @@ class ComputeOperationViewController: UIViewController {
                         presentEmptyResultAlert()
                         return
                     }
-                    
-                    doneWithSuccess()
                     print("Determinant = \(determinant!)")
+                    
+                    doneWithSuccess(result: [determinant!],
+                        dimension: MatrixDimension(columns: 1, rows: 1))
                 }
             })
         case .Solve, .SolveWithErrorCorrection:
@@ -178,9 +185,10 @@ class ComputeOperationViewController: UIViewController {
                         presentEmptyResultAlert()
                         return
                     }
-                    
-                    doneWithSuccess()
                     print("Solution vector: \(vector!)")
+                    
+                    let dimension = MatrixDimension(columns: vector!.count, rows: 1)
+                    doneWithSuccess(result: vector!, dimension: dimension)
                 }
             })
         default:
@@ -200,9 +208,9 @@ class ComputeOperationViewController: UIViewController {
                         presentEmptyResultAlert()
                         return
                     }
-                    
-                    doneWithSuccess()
                     print("\(self.operationToPerform.name): \(matrix!.data))")
+                    
+                    doneWithSuccess(result: matrix!.getLinearArray(), dimension: matrix!.dimension)
                 }
             })
         }
@@ -214,11 +222,7 @@ class ComputeOperationViewController: UIViewController {
     
     private func setup() {
         configureUI()
-        
-        // TODO: Remove
-        resultMatrixDimension = MatrixDimension(columns: 5, rows: 1)
-        resultMatrixArray = [Double](count: resultMatrixDimension!.count(), repeatedValue: 0.0)
-        
+    
         // Configure matrix dimentions and data source.
         
         let defaultsMatrixDimention = MatrixDimension(columns: 3, rows: 3)
@@ -291,8 +295,13 @@ extension ComputeOperationViewController {
         let scrollView = collectionView as UIScrollView
         scrollView.contentInset.bottom = EdgeInsets.scrollView.bottom
         
-        SVProgressHUD.setForegroundColor(UIColor.whiteColor())
-        SVProgressHUD.setBackgroundColor(UIColor.grayColor())
+        SVProgressHUD.setForegroundColor(UIColor.blackColor())
+        SVProgressHUD.setBackgroundColor(UIColor(
+            colorLiteralRed: 239.0 / 255.0,
+            green: 239.0 / 255.0,
+            blue: 244.0 / 255.0,
+            alpha: 1.0)
+        )
     }
     
     private func presentAlert(title title: String = NSLocalizedString("Error", comment: "Error"), message: String?) {
@@ -334,7 +343,7 @@ extension ComputeOperationViewController {
         case .FillMatrixB:
             rows = rhsMatrixDimension.rows
         case .OperationResult:
-            rows = resultMatrixDimension?.rows
+            rows = resultMatrixDimension!.rows
         default:
             break
         }
@@ -465,8 +474,7 @@ extension ComputeOperationViewController: UICollectionViewDataSource {
         case .OperationResult:
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MatrixItemCollectionViewCell.reuseIdentifier, forIndexPath: indexPath) as! MatrixItemCollectionViewCell
             cell.itemTextField.enabled = false
-            // TODO: Remove
-            cell.itemTextField.text = "\(indexPath.row + 1).0"
+            cell.itemTextField.text = "\(resultMatrixArray![indexPath.row])"
             
             return cell
         }
@@ -562,7 +570,12 @@ extension ComputeOperationViewController: UICollectionViewDelegateFlowLayout {
                 return defaultInset
             }
         case .OperationResult:
-            return generateInsetsLikeInFillMatrixASection()
+            switch operationToPerform.type {
+            case .Solve, .SolveWithErrorCorrection, .Determinant:
+                return generateInsetsLikeInFillMatrixASection()
+            default:
+                return defaultInset
+            }
         default:
             return defaultInset
         }
@@ -637,6 +650,8 @@ extension ComputeOperationViewController: UICollectionViewDelegate {
         func setNewDimention(dimension: MatrixDimension) {
             lhsMatrixDimension = dimension
             rhsMatrixDimension = dimension
+            resultMatrixDimension = nil
+            resultMatrixArray = nil
         }
         
         let newDimension = newMatrixDimentionFromSelectedValue(value, atIndexPath: indexPath)

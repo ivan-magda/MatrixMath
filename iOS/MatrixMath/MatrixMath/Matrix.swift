@@ -58,4 +58,19 @@ struct Matrix {
         self.dimension = dimension
     }
     
+    //------------------------------------
+    // MARK: Behavior
+    //------------------------------------
+    
+    func getLinearArray() -> [Double] {
+        var result = [Double]()
+        for anArray in data {
+            for element in anArray {
+                result.append(element)
+            }
+        }
+        
+        return result
+    }
+    
 }
