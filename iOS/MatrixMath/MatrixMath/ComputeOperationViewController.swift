@@ -61,9 +61,11 @@ class ComputeOperationViewController: UIViewController {
     
     private var lhsMatrixDimension: MatrixDimension!
     private var rhsMatrixDimension: MatrixDimension!
+    private var resultMatrixDimension: MatrixDimension?
     
     private var lhsMatrixArray: [Double]!
     private var rhsMatrixArray: [Double]!
+    private var resultMatrixArray: [Double]?
     
     private lazy var numberFormatter: NSNumberFormatter = {
         let numberFormatter = NSNumberFormatter()
@@ -130,10 +132,11 @@ class ComputeOperationViewController: UIViewController {
                 comment: "Empty result error message"))
         }
         
-        func showSuccess() {
+        func doneWithSuccess() {
             hideNetworkActivityIndicator()
             SVProgressHUD.showSuccessWithStatus(NSLocalizedString("Successfully",
                 comment: "Successfully status"))
+            collectionView.reloadData()
         }
         
         guard let lhsMatrix = Matrix(data: lhsMatrixArray, dimension: lhsMatrixDimension) else {
@@ -159,7 +162,7 @@ class ComputeOperationViewController: UIViewController {
                         return
                     }
                     
-                    showSuccess()
+                    doneWithSuccess()
                     print("Determinant = \(determinant!)")
                 }
             })
@@ -176,7 +179,7 @@ class ComputeOperationViewController: UIViewController {
                         return
                     }
                     
-                    showSuccess()
+                    doneWithSuccess()
                     print("Solution vector: \(vector!)")
                 }
             })
@@ -198,7 +201,7 @@ class ComputeOperationViewController: UIViewController {
                         return
                     }
                     
-                    showSuccess()
+                    doneWithSuccess()
                     print("\(self.operationToPerform.name): \(matrix!.data))")
                 }
             })
@@ -211,6 +214,10 @@ class ComputeOperationViewController: UIViewController {
     
     private func setup() {
         configureUI()
+        
+        // TODO: Remove
+        resultMatrixDimension = MatrixDimension(columns: 5, rows: 1)
+        resultMatrixArray = [Double](count: resultMatrixDimension!.count(), repeatedValue: 0.0)
         
         // Configure matrix dimentions and data source.
         
@@ -234,7 +241,10 @@ class ComputeOperationViewController: UIViewController {
         rhsMatrixArray = [Double](count: rhsMatrixDimension.count(), repeatedValue: 0.0)
     }
     
-    private func updateMatrixItemFromText(text: String?, andIndexPath indexPath: NSIndexPath) {
+    private func updateMatrixItem(itemTextField textField: MatrixItemTextField) {
+        let text = textField.text
+        let indexPath = textField.indexPath
+        
         func setValue(number: Double) {
             switch Section.fromIndex(indexPath.section) {
             case .FillMatrixA:
@@ -296,7 +306,7 @@ extension ComputeOperationViewController {
         let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
         
         switch section {
-        case .FillMatrixA, .FillMatrixB:
+        case .FillMatrixA, .FillMatrixB, .OperationResult:
             return sizeForMatrixItemInSection(section, layout: layout)
         case .ComputeOperation:
             return CGSize(width: screenWidth, height: ComputeOperationViewController.computeButtonHeight)
@@ -323,6 +333,8 @@ extension ComputeOperationViewController {
             rows = lhsMatrixDimension.rows
         case .FillMatrixB:
             rows = rhsMatrixDimension.rows
+        case .OperationResult:
+            rows = resultMatrixDimension?.rows
         default:
             break
         }
@@ -383,7 +395,7 @@ extension ComputeOperationViewController: UICollectionViewDataSource {
         case .ComputeOperation:
             return 1
         case .OperationResult:
-            return 0
+            return resultMatrixDimension?.count() ?? 0
         }
     }
     
@@ -435,9 +447,10 @@ extension ComputeOperationViewController: UICollectionViewDataSource {
         case .FillMatrixA, .FillMatrixB:
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MatrixItemCollectionViewCell.reuseIdentifier, forIndexPath: indexPath) as! MatrixItemCollectionViewCell
             cell.itemTextField.delegate = self
+            cell.itemTextField.enabled = true
+            cell.itemTextField.indexPath = indexPath
             
             if section == .FillMatrixB {
-                cell.itemTextField.tag = Section.FillMatrixB.rawValue
                 cell.itemTextField.text = "\(rhsMatrixArray[indexPath.row])"
             } else {
                 cell.itemTextField.text = "\(lhsMatrixArray[indexPath.row])"
@@ -449,13 +462,24 @@ extension ComputeOperationViewController: UICollectionViewDataSource {
             cell.computeButton.addTarget(self, action: #selector(performOperation), forControlEvents: .TouchUpInside)
             
             return cell
-        default:
-            return collectionView.dequeueReusableCellWithReuseIdentifier(MatrixSizeCollectionViewCell.reuseIdentifier, forIndexPath: indexPath) as! MatrixSizeCollectionViewCell
+        case .OperationResult:
+            let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MatrixItemCollectionViewCell.reuseIdentifier, forIndexPath: indexPath) as! MatrixItemCollectionViewCell
+            cell.itemTextField.enabled = false
+            // TODO: Remove
+            cell.itemTextField.text = "\(indexPath.row + 1).0"
+            
+            return cell
         }
     }
     
     func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView {
         let headerView = collectionView.dequeueReusableSupplementaryViewOfKind(kind, withReuseIdentifier: MatrixHeaderView.reuseIdentifier, forIndexPath: indexPath) as! MatrixHeaderView
+        
+        if indexPath.section == Section.OperationResult.rawValue {
+            headerView.headerTitleLabel.text = NSLocalizedString("Computing result",
+                                                                 comment: "Computing result header title")
+            return headerView
+        }
         
         switch operationToPerform.type {
         case .Solve, .SolveWithErrorCorrection:
@@ -502,6 +526,14 @@ extension ComputeOperationViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+        func generateInsetsLikeInFillMatrixASection() -> UIEdgeInsets {
+            let itemWidth = sizeForMatrixItemInSection(Section.FillMatrixA, layout: collectionView.collectionViewLayout as! UICollectionViewFlowLayout).width
+            
+            let margin = floor((screenSize().width - itemWidth) / 2.0)
+            
+            return UIEdgeInsets(top: EdgeInsets.collectionViewSection.top, left: margin, bottom: EdgeInsets.collectionViewSection.bottom, right: margin)
+        }
+        
         guard collectionView.numberOfItemsInSection(section) > 0 else {
             return UIEdgeInsetsZero
         }
@@ -525,14 +557,12 @@ extension ComputeOperationViewController: UICollectionViewDelegateFlowLayout {
         case .FillMatrixB:
             switch operationToPerform.type {
             case .Solve, .SolveWithErrorCorrection:
-                let itemWidth = sizeForMatrixItemInSection(Section.FillMatrixA, layout: collectionView.collectionViewLayout as! UICollectionViewFlowLayout).width
-                
-                let margin = floor((screenSize().width - itemWidth) / 2.0)
-                
-                return UIEdgeInsets(top: EdgeInsets.collectionViewSection.top, left: margin, bottom: EdgeInsets.collectionViewSection.bottom, right: margin)
+                return generateInsetsLikeInFillMatrixASection()
             default:
                 return defaultInset
             }
+        case .OperationResult:
+            return generateInsetsLikeInFillMatrixASection()
         default:
             return defaultInset
         }
@@ -544,7 +574,7 @@ extension ComputeOperationViewController: UICollectionViewDelegateFlowLayout {
         }
         
         switch Section.fromIndex(section) {
-        case .FillMatrixA, .FillMatrixB:
+        case .FillMatrixA, .FillMatrixB, .OperationResult:
             return CGSize(width: collectionView.bounds.width,
                           height: MatrixHeaderView.height)
         default:
@@ -563,6 +593,10 @@ extension ComputeOperationViewController: UICollectionViewDelegate {
     //------------------------------------------------
     // MARK: UICollectionViewDelegate
     //------------------------------------------------
+    
+    func collectionView(collectionView: UICollectionView, shouldSelectItemAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return indexPath.section != Section.OperationResult.rawValue
+    }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         switch Section.fromIndex(indexPath.section) {
@@ -719,11 +753,7 @@ extension ComputeOperationViewController: UITextFieldDelegate {
     }
     
     func textFieldDidEndEditing(textField: UITextField) {
-        guard let cell = textField.superview?.superview as? MatrixItemCollectionViewCell,
-            let indexPath = collectionView.indexPathForCell(cell) else {
-                return
-        }
-        updateMatrixItemFromText(textField.text, andIndexPath: indexPath)
+        updateMatrixItem(itemTextField: textField as! MatrixItemTextField)
     }
     
     //----------------------------------------------

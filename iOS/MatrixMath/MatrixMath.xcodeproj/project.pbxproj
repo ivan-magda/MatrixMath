@@ -10,6 +10,7 @@
 		750905B01CAFFC2200BF8EF8 /* Matrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750905AF1CAFFC2200BF8EF8 /* Matrix.swift */; };
 		750905B71CB018FC00BF8EF8 /* Matrix+JSONParselable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750905B61CB018FC00BF8EF8 /* Matrix+JSONParselable.swift */; };
 		750905B91CB0192400BF8EF8 /* JSONParselable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750905B81CB0192400BF8EF8 /* JSONParselable.swift */; };
+		750D30581CC0B05900FB7629 /* MatrixItemTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750D30571CC0B05900FB7629 /* MatrixItemTextField.swift */; };
 		750FB0251CB6535B008DF5F3 /* ComputeOperationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FB0241CB6535B008DF5F3 /* ComputeOperationViewController.swift */; };
 		750FB02B1CB66487008DF5F3 /* CaseCountable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FB02A1CB66487008DF5F3 /* CaseCountable.swift */; };
 		750FB0311CB69AD8008DF5F3 /* UIUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FB0301CB69AD8008DF5F3 /* UIUtility.swift */; };
@@ -65,6 +66,7 @@
 		750905AF1CAFFC2200BF8EF8 /* Matrix.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Matrix.swift; sourceTree = "<group>"; };
 		750905B61CB018FC00BF8EF8 /* Matrix+JSONParselable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Matrix+JSONParselable.swift"; sourceTree = "<group>"; };
 		750905B81CB0192400BF8EF8 /* JSONParselable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONParselable.swift; sourceTree = "<group>"; };
+		750D30571CC0B05900FB7629 /* MatrixItemTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatrixItemTextField.swift; sourceTree = "<group>"; };
 		750FB0231CB64CDA008DF5F3 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		750FB0241CB6535B008DF5F3 /* ComputeOperationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComputeOperationViewController.swift; sourceTree = "<group>"; };
 		750FB02A1CB66487008DF5F3 /* CaseCountable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CaseCountable.swift; sourceTree = "<group>"; };
@@ -159,6 +161,7 @@
 				750FB03C1CB6D180008DF5F3 /* CollectionView */,
 				751F8FD91CBDD8A70050EC41 /* TextFieldInputAccessoryView */,
 				753F44A31CBF828A0074A07E /* BorderedButton.swift */,
+				750D30571CC0B05900FB7629 /* MatrixItemTextField.swift */,
 			);
 			name = View;
 			path = ..;
@@ -534,6 +537,7 @@
 				759C4AD21CACA25600CBA070 /* GCDBlackBox.swift in Sources */,
 				759C4AA11CAC9F6600CBA070 /* AppDelegate.swift in Sources */,
 				759C4AD61CACA3CF00CBA070 /* JSON.swift in Sources */,
+				750D30581CC0B05900FB7629 /* MatrixItemTextField.swift in Sources */,
 				759C4ADC1CACA4F400CBA070 /* HttpApiClient.swift in Sources */,
 				751F8FD81CBDD2AE0050EC41 /* UIExtensions.swift in Sources */,
 				750FB0391CB6D0C8008DF5F3 /* ComputeOperationCollectionViewCell.swift in Sources */,

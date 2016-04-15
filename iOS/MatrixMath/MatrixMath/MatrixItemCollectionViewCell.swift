@@ -18,7 +18,7 @@ class MatrixItemCollectionViewCell: UICollectionViewCell {
     // MARK: Outlets
     //--------------------------------------
     
-    @IBOutlet weak var itemTextField: UITextField!
+    @IBOutlet weak var itemTextField: MatrixItemTextField!
     
     @IBOutlet weak var textFieldLeadingSpaceConstraint: NSLayoutConstraint!
     @IBOutlet weak var textFieldTrailingSpaceConstraint: NSLayoutConstraint!
