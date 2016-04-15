@@ -9,10 +9,10 @@
 import Foundation
 
 //----------------------------------------------------------
-// MARK: - MatrixDimention
+// MARK: - MatrixDimension
 //----------------------------------------------------------
 
-public struct MatrixDimention {
+public struct MatrixDimension {
     
     //------------------------------------------------------
     // MARK: Properties

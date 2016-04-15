@@ -22,7 +22,7 @@ struct Matrix {
     //------------------------------------
     
     let data: MatrixDataType
-    let dimention: MatrixDimention
+    let dimension: MatrixDimension
     
     //------------------------------------
     // MARK: Initializers
@@ -33,21 +33,21 @@ struct Matrix {
         
         let columns = data.count
         let rows = data[0].count
-        self.dimention = MatrixDimention(columns: columns, rows: rows)
+        self.dimension = MatrixDimension(columns: columns, rows: rows)
     }
     
-    init?(data: Array<Double>, dimention: MatrixDimention) {
-        guard data.count == dimention.count()
+    init?(data: Array<Double>, dimension: MatrixDimension) {
+        guard data.count == dimension.count()
             && data.count > 0
-            && dimention.nonZero() else {
+            && dimension.nonZero() else {
             return nil
         }
         
         var array = MatrixDataType()
-        for columnIdx in 0..<dimention.columns {
-            var elemIdx = columnIdx * dimention.rows
+        for columnIdx in 0..<dimension.columns {
+            var elemIdx = columnIdx * dimension.rows
             var elements = [Double]()
-            for _ in 0..<dimention.rows {
+            for _ in 0..<dimension.rows {
                 elements.append(data[elemIdx])
                 elemIdx += 1
             }
@@ -55,7 +55,7 @@ struct Matrix {
         }
         
         self.data = array
-        self.dimention = dimention
+        self.dimension = dimension
     }
     
 }

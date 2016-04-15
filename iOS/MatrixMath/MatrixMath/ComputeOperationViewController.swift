@@ -59,8 +59,8 @@ class ComputeOperationViewController: UIViewController {
     var operationToPerform: MatrixOperation!
     var apiClient: MatrixMathApiClient!
     
-    private var lhsMatrixDimention: MatrixDimention!
-    private var rhsMatrixDimention: MatrixDimention!
+    private var lhsMatrixDimension: MatrixDimension!
+    private var rhsMatrixDimension: MatrixDimension!
     
     private var lhsMatrixArray: [Double]!
     private var rhsMatrixArray: [Double]!
@@ -136,17 +136,17 @@ class ComputeOperationViewController: UIViewController {
                 comment: "Successfully status"))
         }
         
-        guard let lhsMatrix = Matrix(data: lhsMatrixArray, dimention: lhsMatrixDimention) else {
+        guard let lhsMatrix = Matrix(data: lhsMatrixArray, dimension: lhsMatrixDimension) else {
             presentAlert(message: NSLocalizedString("Could't perform operation", comment: "Failed to perfrom operation message"))
             return
         }
         
         SVProgressHUD.showWithStatus(NSLocalizedString("Computing...", comment: "Computing status"))
+        showNetworkActivityIndicator()
         
         let type = operationToPerform.type
         switch type {
         case .Determinant:
-            showNetworkActivityIndicator()
             apiClient.determinant(matrix: lhsMatrix, completionHandler: { (determinant, error) in
                 performOnMain {
                     guard error == nil else {
@@ -164,7 +164,6 @@ class ComputeOperationViewController: UIViewController {
                 }
             })
         case .Solve, .SolveWithErrorCorrection:
-            showNetworkActivityIndicator()
             apiClient.performSolveOperationWithType(type, coefficientsMatrix: lhsMatrix, valuesVector: rhsMatrixArray, completionHandler: { (vector, error) in
                 performOnMain {
                     guard error == nil else {
@@ -183,11 +182,10 @@ class ComputeOperationViewController: UIViewController {
             })
         default:
             var matrices = [lhsMatrix]
-            if let rhsMatrix = Matrix(data: rhsMatrixArray, dimention: rhsMatrixDimention) {
+            if let rhsMatrix = Matrix(data: rhsMatrixArray, dimension: rhsMatrixDimension) {
                 matrices.append(rhsMatrix)
             }
             
-            showNetworkActivityIndicator()
             apiClient.performMatrixOperationWithType(type, matrices: matrices, withCompletionHandler: { (matrix, error) in
                 performOnMain {
                     guard error == nil else {
@@ -216,24 +214,24 @@ class ComputeOperationViewController: UIViewController {
         
         // Configure matrix dimentions and data source.
         
-        let defaultsMatrixDimention = MatrixDimention(columns: 3, rows: 3)
-        lhsMatrixDimention = defaultsMatrixDimention
+        let defaultsMatrixDimention = MatrixDimension(columns: 3, rows: 3)
+        lhsMatrixDimension = defaultsMatrixDimention
         
         switch operationToPerform.type {
         case .Addition, .Subtract, .Multiply:
-            rhsMatrixDimention = defaultsMatrixDimention
+            rhsMatrixDimension = defaultsMatrixDimention
         case .Solve, .SolveWithErrorCorrection:
-            rhsMatrixDimention = MatrixDimention(columns: 3, rows: 1)
+            rhsMatrixDimension = MatrixDimension(columns: 3, rows: 1)
         default:
-            rhsMatrixDimention = MatrixDimention(columns: 0, rows: 0)
+            rhsMatrixDimension = MatrixDimension(columns: 0, rows: 0)
         }
         
         initMatrices()
     }
     
     private func initMatrices() {
-        lhsMatrixArray = [Double](count: lhsMatrixDimention.count(), repeatedValue: 0.0)
-        rhsMatrixArray = [Double](count: rhsMatrixDimention.count(), repeatedValue: 0.0)
+        lhsMatrixArray = [Double](count: lhsMatrixDimension.count(), repeatedValue: 0.0)
+        rhsMatrixArray = [Double](count: rhsMatrixDimension.count(), repeatedValue: 0.0)
     }
     
     private func updateMatrixItemFromText(text: String?, andIndexPath indexPath: NSIndexPath) {
@@ -322,9 +320,9 @@ extension ComputeOperationViewController {
         var rows: Int!
         switch section {
         case .FillMatrixA:
-            rows = lhsMatrixDimention.rows
+            rows = lhsMatrixDimension.rows
         case .FillMatrixB:
-            rows = rhsMatrixDimention.rows
+            rows = rhsMatrixDimension.rows
         default:
             break
         }
@@ -372,13 +370,13 @@ extension ComputeOperationViewController: UICollectionViewDataSource {
                 return 4
             }
         case .FillMatrixA:
-            return lhsMatrixDimention.count()
+            return lhsMatrixDimension.count()
         case .FillMatrixB:
             switch operationToPerform.type {
             case .Addition, .Subtract, .Multiply:
-                return rhsMatrixDimention.count()
+                return rhsMatrixDimension.count()
             case .Solve, .SolveWithErrorCorrection:
-                return rhsMatrixDimention.columns
+                return rhsMatrixDimension.columns
             default:
                 return 0
             }
@@ -407,12 +405,12 @@ extension ComputeOperationViewController: UICollectionViewDataSource {
             case .Solve, .SolveWithErrorCorrection:
                 cell.titleLabel.text = NSLocalizedString("Number of unknowns",
                                                          comment: "Number of unknowns title")
-                cell.sizeLabel.text = "\(lhsMatrixDimention.rows)"
+                cell.sizeLabel.text = "\(lhsMatrixDimension.rows)"
             case .Addition, .Subtract, .Transpose, .Determinant, .Invert:
                 cell.titleLabel.text = (index % 2 == 0
                     ? numberOfColumnsTitle : numberOfRowsTitle)
                 cell.sizeLabel.text  = (index % 2 == 0
-                    ? "\(lhsMatrixDimention.columns)" : "\(lhsMatrixDimention.rows)")
+                    ? "\(lhsMatrixDimension.columns)" : "\(lhsMatrixDimension.rows)")
             case .Multiply:
                 if index < 2 {
                     let matrixA = NSLocalizedString("of the matrix A", comment: "Matrix A end name")
@@ -420,16 +418,16 @@ extension ComputeOperationViewController: UICollectionViewDataSource {
                         ? "\(numberOfColumnsTitle) \(matrixA)"
                         : "\(numberOfRowsTitle) \(matrixA)")
                     cell.sizeLabel.text  = (index % 2 == 0
-                        ? "\(lhsMatrixDimention.columns)"
-                        : "\(lhsMatrixDimention.rows)")
+                        ? "\(lhsMatrixDimension.columns)"
+                        : "\(lhsMatrixDimension.rows)")
                 } else {
                     let matrixB = NSLocalizedString("of the matrix B", comment: "Matrix B end name")
                     cell.titleLabel.text = (index % 2 == 0
                         ? "\(numberOfColumnsTitle) \(matrixB)"
                         : "\(numberOfRowsTitle) \(matrixB)")
                     cell.sizeLabel.text  = (index % 2 == 0
-                        ? "\(rhsMatrixDimention.columns)"
-                        : "\(rhsMatrixDimention.rows)")
+                        ? "\(rhsMatrixDimension.columns)"
+                        : "\(rhsMatrixDimension.rows)")
                 }
             }
             
@@ -602,35 +600,35 @@ extension ComputeOperationViewController: UICollectionViewDelegate {
     //------------------------------------------------
     
     private func updateMatrixDimentionsWithSelectedValue(value: Int, atIndexPath indexPath: NSIndexPath) {
-        func setNewDimention(dimention: MatrixDimention) {
-            lhsMatrixDimention = dimention
-            rhsMatrixDimention = dimention
+        func setNewDimention(dimension: MatrixDimension) {
+            lhsMatrixDimension = dimension
+            rhsMatrixDimension = dimension
         }
         
-        let newDimention = newMatrixDimentionFromSelectedValue(value, atIndexPath: indexPath)
+        let newDimension = newMatrixDimentionFromSelectedValue(value, atIndexPath: indexPath)
         
         switch operationToPerform.type {
         case .Addition, .Subtract:
-            setNewDimention(newDimention)
+            setNewDimention(newDimension)
         case .Determinant, .Invert:
-            setNewDimention(MatrixDimention(columns: value, rows: value))
+            setNewDimention(MatrixDimension(columns: value, rows: value))
         case .Multiply, .Transpose:
             if isSelectingNumberOfColumnsAtIndexPath(indexPath) {
                 if isLhsMatrixAtIndexPath(indexPath) {
-                    lhsMatrixDimention = newDimention
+                    lhsMatrixDimension = newDimension
                 } else {
-                    rhsMatrixDimention = newDimention
+                    rhsMatrixDimension = newDimension
                 }
             } else {
                 if isLhsMatrixAtIndexPath(indexPath) {
-                    lhsMatrixDimention = newDimention
+                    lhsMatrixDimension = newDimension
                 } else {
-                    rhsMatrixDimention = newDimention
+                    rhsMatrixDimension = newDimension
                 }
             }
         case .Solve, .SolveWithErrorCorrection:
-            lhsMatrixDimention = MatrixDimention(columns: value, rows: value)
-            rhsMatrixDimention = MatrixDimention(columns: value, rows: 1)
+            lhsMatrixDimension = MatrixDimension(columns: value, rows: value)
+            rhsMatrixDimension = MatrixDimension(columns: value, rows: 1)
         }
         
         initMatrices()
@@ -640,33 +638,33 @@ extension ComputeOperationViewController: UICollectionViewDelegate {
     private func initialSelectionValueForActionSheetPickerAtIndexPath(indexPath: NSIndexPath) -> Int {
         if isSelectingNumberOfColumnsAtIndexPath(indexPath) {
             return (isLhsMatrixAtIndexPath(indexPath)
-                ? lhsMatrixDimention.columns - 1
-                : rhsMatrixDimention.columns - 1)
+                ? lhsMatrixDimension.columns - 1
+                : rhsMatrixDimension.columns - 1)
         } else {
             return (isLhsMatrixAtIndexPath(indexPath)
-                ? lhsMatrixDimention.rows - 1
-                : rhsMatrixDimention.rows - 1)
+                ? lhsMatrixDimension.rows - 1
+                : rhsMatrixDimension.rows - 1)
         }
     }
     
-    private func newMatrixDimentionFromSelectedValue(value: Int, atIndexPath indexPath: NSIndexPath) -> MatrixDimention {
+    private func newMatrixDimentionFromSelectedValue(value: Int, atIndexPath indexPath: NSIndexPath) -> MatrixDimension {
         let originalDimention = originalMatrixDimentionAtIndexPath(indexPath)
         if isSelectingNumberOfColumnsAtIndexPath(indexPath) {
-            return MatrixDimention(columns: value, rows: originalDimention.rows)
+            return MatrixDimension(columns: value, rows: originalDimention.rows)
         } else {
-            return MatrixDimention(columns: originalDimention.columns, rows: value)
+            return MatrixDimension(columns: originalDimention.columns, rows: value)
         }
     }
     
-    private func originalMatrixDimentionAtIndexPath(indexPath: NSIndexPath) -> MatrixDimention {
+    private func originalMatrixDimentionAtIndexPath(indexPath: NSIndexPath) -> MatrixDimension {
         let columns = (isLhsMatrixAtIndexPath(indexPath)
-            ? lhsMatrixDimention.columns
-            : rhsMatrixDimention.columns)
+            ? lhsMatrixDimension.columns
+            : rhsMatrixDimension.columns)
         let rows = (isLhsMatrixAtIndexPath(indexPath)
-            ? lhsMatrixDimention.rows
-            : rhsMatrixDimention.rows)
+            ? lhsMatrixDimension.rows
+            : rhsMatrixDimension.rows)
         
-        return MatrixDimention(columns: columns, rows: rows)
+        return MatrixDimension(columns: columns, rows: rows)
     }
     
     private func isSelectingNumberOfColumnsAtIndexPath(indexPath: NSIndexPath) -> Bool {

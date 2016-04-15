@@ -18,7 +18,7 @@
 		750FB0371CB6C7BA008DF5F3 /* MatrixHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FB0361CB6C7BA008DF5F3 /* MatrixHeaderView.swift */; };
 		750FB0391CB6D0C8008DF5F3 /* ComputeOperationCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750FB0381CB6D0C8008DF5F3 /* ComputeOperationCollectionViewCell.swift */; };
 		751F8FD81CBDD2AE0050EC41 /* UIExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751F8FD71CBDD2AE0050EC41 /* UIExtensions.swift */; };
-		752D4D891CB73885000826FD /* MatrixDimention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752D4D881CB73885000826FD /* MatrixDimention.swift */; };
+		752D4D891CB73885000826FD /* MatrixDimension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752D4D881CB73885000826FD /* MatrixDimension.swift */; };
 		753F44A21CBF7C290074A07E /* MatrixMathApiClient+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753F44A11CBF7C290074A07E /* MatrixMathApiClient+Convenience.swift */; };
 		753F44A41CBF828A0074A07E /* BorderedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753F44A31CBF828A0074A07E /* BorderedButton.swift */; };
 		753F44A71CBF829F0074A07E /* MatrixItemTextFieldInputAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753F44A51CBF829F0074A07E /* MatrixItemTextFieldInputAccessoryView.swift */; };
@@ -74,7 +74,7 @@
 		750FB0361CB6C7BA008DF5F3 /* MatrixHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MatrixHeaderView.swift; path = MatrixMath/MatrixHeaderView.swift; sourceTree = "<group>"; };
 		750FB0381CB6D0C8008DF5F3 /* ComputeOperationCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ComputeOperationCollectionViewCell.swift; path = MatrixMath/ComputeOperationCollectionViewCell.swift; sourceTree = "<group>"; };
 		751F8FD71CBDD2AE0050EC41 /* UIExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIExtensions.swift; sourceTree = "<group>"; };
-		752D4D881CB73885000826FD /* MatrixDimention.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatrixDimention.swift; sourceTree = "<group>"; };
+		752D4D881CB73885000826FD /* MatrixDimension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatrixDimension.swift; sourceTree = "<group>"; };
 		753F44A11CBF7C290074A07E /* MatrixMathApiClient+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MatrixMathApiClient+Convenience.swift"; sourceTree = "<group>"; };
 		753F44A31CBF828A0074A07E /* BorderedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BorderedButton.swift; path = MatrixMath/BorderedButton.swift; sourceTree = "<group>"; };
 		753F44A51CBF829F0074A07E /* MatrixItemTextFieldInputAccessoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MatrixItemTextFieldInputAccessoryView.swift; path = MatrixMath/MatrixItemTextFieldInputAccessoryView.swift; sourceTree = "<group>"; };
@@ -148,7 +148,7 @@
 				750905B61CB018FC00BF8EF8 /* Matrix+JSONParselable.swift */,
 				7555A3C71CB55188004C32D3 /* MatrixOperation.swift */,
 				7555A3C91CB551BF004C32D3 /* MatrixOperationType.swift */,
-				752D4D881CB73885000826FD /* MatrixDimention.swift */,
+				752D4D881CB73885000826FD /* MatrixDimension.swift */,
 			);
 			name = Matrix;
 			sourceTree = "<group>";
@@ -521,7 +521,7 @@
 				750FB0311CB69AD8008DF5F3 /* UIUtility.swift in Sources */,
 				750905B91CB0192400BF8EF8 /* JSONParselable.swift in Sources */,
 				759C4AA31CAC9F6600CBA070 /* MatrixOperationsTableViewController.swift in Sources */,
-				752D4D891CB73885000826FD /* MatrixDimention.swift in Sources */,
+				752D4D891CB73885000826FD /* MatrixDimension.swift in Sources */,
 				759C4AE01CACA5A300CBA070 /* JsonApiClient.swift in Sources */,
 				7555A3C81CB55188004C32D3 /* MatrixOperation.swift in Sources */,
 				7555A3CA1CB551BF004C32D3 /* MatrixOperationType.swift in Sources */,
