@@ -22,6 +22,7 @@ struct Matrix {
     //------------------------------------
     
     let data: MatrixDataType
+    let dimention: MatrixDimention
     
     //------------------------------------
     // MARK: Initializers
@@ -29,6 +30,10 @@ struct Matrix {
     
     init(data: MatrixDataType) {
         self.data = data
+        
+        let columns = data.count
+        let rows = data[0].count
+        self.dimention = MatrixDimention(columns: columns, rows: rows)
     }
     
     init?(data: Array<Double>, dimention: MatrixDimention) {
@@ -50,6 +55,7 @@ struct Matrix {
         }
         
         self.data = array
+        self.dimention = dimention
     }
     
 }
