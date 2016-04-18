@@ -19,8 +19,8 @@ extension MatrixMathApiClient {
         
         // MARK: URLs
         static let ApiScheme = "http"
-        static let ApiHost = "192.168.10.3"
-        static let ApiPath = "/~ivanmagda/matrix/api"
+        static let ApiHost = "dota2begin.tk"
+        static let ApiPath = "/server/api"
     }
     
     // MARK: Methods
