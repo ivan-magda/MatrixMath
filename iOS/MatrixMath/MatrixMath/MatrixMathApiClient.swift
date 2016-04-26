@@ -164,7 +164,7 @@ class MatrixMathApiClient: JsonApiClient {
     private func postRequestWithParameters(params: [String: AnyObject]?, path: String?, body: String) -> NSURLRequest {
         let request = NSMutableURLRequest(URL: destiantionURLFromParameters(params, pathExtension: path))
         request.HTTPBody = body.dataUsingEncoding(NSUTF8StringEncoding)
-        request.HTTPMethod = HTTTPMethodName.Post
+        request.HTTPMethod = HTTPMethodName.Post.rawValue
         
         return request as NSURLRequest
     }

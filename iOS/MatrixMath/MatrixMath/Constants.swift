@@ -50,9 +50,9 @@ extension MatrixMathApiClient {
 }
 
 //--------------------------------------------
-// MARK: - HTTTPMethodName
+// MARK: - HTTPMethodName
 //--------------------------------------------
-struct HTTTPMethodName {
-    static let Get = "GET"
-    static let Post = "POST"
+enum HTTPMethodName: String {
+    case Get = "GET"
+    case Post = "POST"
 }
