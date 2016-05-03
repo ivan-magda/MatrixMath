@@ -4,14 +4,14 @@
 An iPhone app that lets you to perform math operations on matrix objects and see the computing result.
 Use [Matrix Math API](https://github.com/Umichata/Project_3A) for computing result.
 
-<img src="https://github.com/vanyaland/MatrixMath/blob/master/Screenshots/operations_list.png"
+<img src="https://github.com/vanyaland/MatrixMath/blob/master/Screenshots/iOS/operations_list.png"
 width="240" height="426" >
 
-<img src="https://github.com/vanyaland/MatrixMath/blob/master/Screenshots/addition.png"
+<img src="https://github.com/vanyaland/MatrixMath/blob/master/Screenshots/iOS/addition.png"
 width="240" height="426" hspace="8">
-<img src="https://github.com/vanyaland/MatrixMath/blob/master/Screenshots/addition_computing.png"
+<img src="https://github.com/vanyaland/MatrixMath/blob/master/Screenshots/iOS/addition_computing.png"
 width="240" height="426" >
-<img src="https://github.com/vanyaland/MatrixMath/blob/master/Screenshots/addition_result.png"
+<img src="https://github.com/vanyaland/MatrixMath/blob/master/Screenshots/iOS/addition_result.png"
 width="240" height="426" hspace="8">
-<img src="https://github.com/vanyaland/MatrixMath/blob/master/Screenshots/solve.png"
+<img src="https://github.com/vanyaland/MatrixMath/blob/master/Screenshots/iOS/solve.png"
 width="240" height="426" >
