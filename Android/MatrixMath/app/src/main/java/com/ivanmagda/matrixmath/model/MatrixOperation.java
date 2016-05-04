@@ -1,6 +1,10 @@
 package com.ivanmagda.matrixmath.model;
 
-public class MatrixOperation {
+import java.io.Serializable;
+
+public class MatrixOperation implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String name;
     private String detailDescription;
@@ -39,6 +43,15 @@ public class MatrixOperation {
 
     public void setType(MatrixOperationType type) {
         this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return "MatrixOperation{" +
+                "name='" + name + '\'' +
+                ", detailDescription='" + detailDescription + '\'' +
+                ", type=" + type +
+                '}';
     }
 
 }
