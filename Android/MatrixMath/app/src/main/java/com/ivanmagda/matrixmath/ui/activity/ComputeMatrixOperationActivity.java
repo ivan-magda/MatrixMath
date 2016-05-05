@@ -49,11 +49,15 @@ public class ComputeMatrixOperationActivity extends AppCompatActivity {
 
     private void configureUI() {
         ExpandableHeightGridView gridViewA = (ExpandableHeightGridView) findViewById(R.id.grid_view_a);
+        ExpandableHeightGridView gridViewB = (ExpandableHeightGridView) findViewById(R.id.grid_view_b);
+
+        assert gridViewA != null;
+        assert gridViewB != null;
+
         gridViewA.setAdapter(new MatrixAdapter(this));
         gridViewA.setNumColumns(3);
         gridViewA.setExpanded(true);
 
-        ExpandableHeightGridView gridViewB = (ExpandableHeightGridView) findViewById(R.id.grid_view_b);
         gridViewB.setAdapter(new MatrixAdapter(this));
         gridViewB.setNumColumns(3);
         gridViewB.setExpanded(true);

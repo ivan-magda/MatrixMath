@@ -5,7 +5,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
-import android.widget.GridView;
 
 public class MatrixAdapter extends BaseAdapter {
     private Context context;
@@ -34,7 +33,6 @@ public class MatrixAdapter extends BaseAdapter {
         EditText editText;
         if (convertView == null) {
             editText = new EditText(context);
-            editText.setLayoutParams(new GridView.LayoutParams(80, 80));
         } else {
             editText = (EditText) convertView;
         }

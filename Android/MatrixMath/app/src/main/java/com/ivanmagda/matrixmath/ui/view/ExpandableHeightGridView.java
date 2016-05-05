@@ -3,8 +3,9 @@ package com.ivanmagda.matrixmath.ui.view;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
+import android.widget.GridView;
 
-public class ExpandableHeightGridView extends HeaderGridView {
+public class ExpandableHeightGridView extends GridView {
 
     boolean expanded = false;
 
