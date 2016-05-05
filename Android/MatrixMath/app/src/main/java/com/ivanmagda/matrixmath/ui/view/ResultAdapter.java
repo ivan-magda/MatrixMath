@@ -1,17 +1,17 @@
 package com.ivanmagda.matrixmath.ui.view;
 
 import android.content.Context;
-import android.text.InputType;
+import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
+import android.widget.TextView;
 
-public class MatrixAdapter extends BaseAdapter {
+public class ResultAdapter extends BaseAdapter {
     private Context context;
 
-    public MatrixAdapter(Context context) {
+    public ResultAdapter(Context context) {
         this.context = context;
     }
 
@@ -32,17 +32,17 @@ public class MatrixAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        EditText editText;
+        TextView textView;
         if (convertView == null) {
-            editText = new EditText(context);
-            editText.setInputType(InputType.TYPE_CLASS_NUMBER
-                    | InputType.TYPE_NUMBER_FLAG_DECIMAL
-                    | InputType.TYPE_NUMBER_FLAG_SIGNED);
-            editText.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+            textView = new TextView(context);
+            textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+            textView.setTextColor(ContextCompat.getColor(context, android.R.color.black));
+            textView.setTextSize(19);
+            textView.setText(String.valueOf(position + 1));
         } else {
-            editText = (EditText) convertView;
+            textView = (TextView) convertView;
         }
 
-        return editText;
+        return textView;
     }
 }
