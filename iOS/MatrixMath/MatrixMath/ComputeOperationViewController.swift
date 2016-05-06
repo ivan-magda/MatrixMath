@@ -232,7 +232,7 @@ class ComputeOperationViewController: UIViewController {
         case .Addition, .Subtract, .Multiply:
             rhsMatrixDimension = defaultsMatrixDimention
         case .Solve, .SolveWithErrorCorrection:
-            rhsMatrixDimension = MatrixDimension(columns: 3, rows: 1)
+            rhsMatrixDimension = MatrixDimension(columns: 1, rows: 3)
         default:
             rhsMatrixDimension = MatrixDimension(columns: 0, rows: 0)
         }
@@ -336,14 +336,14 @@ extension ComputeOperationViewController {
         // It may be lhs matrix(when perform binary/unary operation) or
         // rhs matrix(when perform binary operation).
         
-        var rows: Int!
+        var columns: Int!
         switch section {
         case .FillMatrixA:
-            rows = lhsMatrixDimension.rows
+            columns = lhsMatrixDimension.columns
         case .FillMatrixB:
-            rows = rhsMatrixDimension.rows
+            columns = rhsMatrixDimension.columns
         case .OperationResult:
-            rows = resultMatrixDimension!.rows
+            columns = resultMatrixDimension!.columns
         default:
             break
         }
@@ -355,9 +355,9 @@ extension ComputeOperationViewController {
         let minimumInteritemSpacing = layout.minimumInteritemSpacing
         
         let remainingWidth = screenWidth - (sectionInset.left + sectionInset.right
-            + CGFloat((rows - 1)) * minimumInteritemSpacing)
+            + CGFloat((columns - 1)) * minimumInteritemSpacing)
         
-        var width = floor(remainingWidth / CGFloat(rows))
+        var width = floor(remainingWidth / CGFloat(columns))
         
         if width < ComputeOperationViewController.minimumMatrixItemWidth {
             width = ComputeOperationViewController.minimumMatrixItemWidth
@@ -394,10 +394,8 @@ extension ComputeOperationViewController: UICollectionViewDataSource {
             return lhsMatrixDimension.count()
         case .FillMatrixB:
             switch operationToPerform.type {
-            case .Addition, .Subtract, .Multiply:
+            case .Addition, .Subtract, .Multiply, .Solve, .SolveWithErrorCorrection:
                 return rhsMatrixDimension.count()
-            case .Solve, .SolveWithErrorCorrection:
-                return rhsMatrixDimension.columns
             default:
                 return 0
             }
@@ -677,7 +675,7 @@ extension ComputeOperationViewController: UICollectionViewDelegate {
             }
         case .Solve, .SolveWithErrorCorrection:
             lhsMatrixDimension = MatrixDimension(columns: value, rows: value)
-            rhsMatrixDimension = MatrixDimension(columns: value, rows: 1)
+            rhsMatrixDimension = MatrixDimension(columns: 1, rows: value)
         }
         
         initMatrices()
@@ -721,7 +719,7 @@ extension ComputeOperationViewController: UICollectionViewDelegate {
     }
     
     private func isLhsMatrixAtIndexPath(indexPath: NSIndexPath) -> Bool {
-        return indexPath.row < 2
+        return indexPath.section == Section.MatrixSize.rawValue && indexPath.row < 2
     }
     
 }
