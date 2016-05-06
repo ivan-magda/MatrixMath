@@ -8,26 +8,37 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 
-public class MatrixAdapter extends BaseAdapter {
-    private Context context;
+import com.ivanmagda.matrixmath.model.MatrixDimension;
 
-    public MatrixAdapter(Context context) {
+import java.util.List;
+
+public class MatrixAdapter extends BaseAdapter {
+
+    private Context context;
+    private MatrixDimension dimension;
+    private List<Double> elements;
+
+    public MatrixAdapter(Context context, MatrixDimension dimension, List<Double> elements) {
+        if (dimension.getCount() != elements.size()) throw new AssertionError();
+
         this.context = context;
+        this.dimension = dimension;
+        this.elements = elements;
     }
 
     @Override
     public int getCount() {
-        return 9;
+        return dimension.getCount();
     }
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return elements.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @Override
@@ -43,6 +54,14 @@ public class MatrixAdapter extends BaseAdapter {
             editText = (EditText) convertView;
         }
 
+        editText.setText(String.valueOf(getItem(position)));
+
         return editText;
+    }
+
+    public void updateWithNewData(MatrixDimension dimension, List<Double> elements) {
+        this.dimension = dimension;
+        this.elements = elements;
+        notifyDataSetChanged();
     }
 }

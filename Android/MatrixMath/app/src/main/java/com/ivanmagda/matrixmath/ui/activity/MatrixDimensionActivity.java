@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -21,6 +22,9 @@ public class MatrixDimensionActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = MatrixDimensionActivity.class.getSimpleName();
 
+    private static final int MIN_VALUE = 1;
+    private static final int MAX_VALUE = 7;
+
     private TextView columnsSizeTextView;
     private TextView rowsSizeTextView;
     private TextView columnsTitleTextView;
@@ -34,6 +38,11 @@ public class MatrixDimensionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_matrix_dimension);
 
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(R.string.matrix_dimension_activity_title);
+        }
+
         Intent intent = getIntent();
         dimension = (MatrixDimension) intent.getSerializableExtra(Extras.EXTRA_MATRIX_DIMENSION_TRANSFER);
         assert dimension != null;
@@ -43,6 +52,9 @@ public class MatrixDimensionActivity extends AppCompatActivity {
         rowsTitleTextView = (TextView) findViewById(R.id.number_of_rows);
         columnsSizeTextView = (TextView) findViewById(R.id.number_of_columns_text);
         rowsSizeTextView = (TextView) findViewById(R.id.number_of_rows_text);
+
+        columnsSizeTextView.setText(String.valueOf(dimension.getColumns()));
+        rowsSizeTextView.setText(String.valueOf(dimension.getRows()));
 
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,8 +156,8 @@ public class MatrixDimensionActivity extends AppCompatActivity {
 
     private MaterialNumberPicker numberPickerWithDefaultValue(int value) {
         return new MaterialNumberPicker.Builder(MatrixDimensionActivity.this)
-                .minValue(1)
-                .maxValue(10)
+                .minValue(MIN_VALUE)
+                .maxValue(MAX_VALUE)
                 .defaultValue(value)
                 .backgroundColor(Color.WHITE)
                 .separatorColor(Color.TRANSPARENT)

@@ -58,10 +58,10 @@ public class MatrixOperationsActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        unaryTest();
-        binaryTest();
-        determinantTest();
-        solveTest();
+//        unaryTest();
+//        binaryTest();
+//        determinantTest();
+//        solveTest();
     }
 
     // Configure UI.

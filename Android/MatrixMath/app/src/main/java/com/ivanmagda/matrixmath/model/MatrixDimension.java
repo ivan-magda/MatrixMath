@@ -38,6 +38,10 @@ public class MatrixDimension implements Serializable {
         return columns != 0 && rows != 0;
     }
 
+    public String dimensionString() {
+        return String.valueOf(columns) + "x" + String.valueOf(rows);
+    }
+
     @Override
     public String toString() {
         return "MatrixDimension{" +

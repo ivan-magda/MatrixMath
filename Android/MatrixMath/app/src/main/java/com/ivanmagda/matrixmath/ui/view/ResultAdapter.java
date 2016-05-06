@@ -8,26 +8,37 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public class ResultAdapter extends BaseAdapter {
-    private Context context;
+import com.ivanmagda.matrixmath.model.MatrixDimension;
 
-    public ResultAdapter(Context context) {
+import java.util.List;
+
+public class ResultAdapter extends BaseAdapter {
+
+    private Context context;
+    private MatrixDimension dimension;
+    private List<Double> elements;
+
+    public ResultAdapter(Context context, MatrixDimension dimension, List<Double> elements) {
+        if (dimension.getCount() != elements.size()) throw new AssertionError();
+
         this.context = context;
+        this.dimension = dimension;
+        this.elements = elements;
     }
 
     @Override
     public int getCount() {
-        return 9;
+        return dimension.getCount();
     }
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return elements.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @Override
@@ -38,11 +49,18 @@ public class ResultAdapter extends BaseAdapter {
             textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
             textView.setTextColor(ContextCompat.getColor(context, android.R.color.black));
             textView.setTextSize(19);
-            textView.setText(String.valueOf(position + 1));
         } else {
             textView = (TextView) convertView;
         }
 
+        textView.setText(String.valueOf(getItem(position)));
+
         return textView;
+    }
+
+    public void updateWithNewData(MatrixDimension dimension, List<Double> elements) {
+        this.dimension = dimension;
+        this.elements = elements;
+        notifyDataSetChanged();
     }
 }
