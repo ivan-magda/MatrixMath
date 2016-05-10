@@ -1,11 +1,13 @@
 package com.ivanmagda.matrixmath.model.request.body;
 
+import java.util.List;
+
 public class MatrixBinaryRequestBody {
 
-    final Double[][] left;
-    final Double[][] right;
+    final List<List<Double>> left;
+    final List<List<Double>> right;
 
-    public MatrixBinaryRequestBody(Double[][] left, Double[][] right) {
+    public MatrixBinaryRequestBody(List<List<Double>> left, List<List<Double>> right) {
         this.left = left;
         this.right = right;
     }

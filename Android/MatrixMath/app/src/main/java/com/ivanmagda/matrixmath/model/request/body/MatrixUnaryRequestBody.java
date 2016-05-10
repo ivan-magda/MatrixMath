@@ -1,9 +1,11 @@
 package com.ivanmagda.matrixmath.model.request.body;
 
-public class MatrixUnaryRequestBody {
-    final Double[][] matrix;
+import java.util.List;
 
-    public MatrixUnaryRequestBody(Double[][] matrix) {
+public class MatrixUnaryRequestBody {
+    final List<List<Double>> matrix;
+
+    public MatrixUnaryRequestBody(List<List<Double>> matrix) {
         this.matrix = matrix;
     }
 }
