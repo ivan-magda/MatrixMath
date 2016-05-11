@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,38 +43,48 @@ import retrofit2.Response;
 
 public class ComputeMatrixOperationActivity extends AppCompatActivity {
 
-    private enum EditingDimension {MATRIX_A, MATRIX_B, NONE}
+    private enum EditingDimension {LHS_MATRIX, RHS_MATRIX, NONE}
 
     // Properties.
 
     private static final String LOG_TAG = ComputeMatrixOperationActivity.class.getSimpleName();
     private static final int REQUEST_CODE_MATRIX_DIMENSION_ACTIVITY = 1234;
 
-    private TextView matrixADimensionTitle;
-    private TextView matrixBDimensionTitle;
-    private TextView matrixADimensionSizeText;
-    private TextView matrixBDimensionSizeText;
-
     private MatrixOperation matrixOperation;
 
-    private ExpandableHeightGridView gridViewA;
-    private ExpandableHeightGridView gridViewB;
+    // Dimension TextViews.
+    private TextView lhsMatrixDimensionTitle;
+    private TextView rhsMatrixDimensionTitle;
+    private TextView lhsMatrixDimensionSizeText;
+    private TextView rhsMatrixDimensionSizeText;
+
+    // Header TextViews.
+    private TextView lhsMatrixHeaderTitle;
+    private TextView rhsMatrixHeaderTitle;
+    private TextView resultMatrixHeaderTitle;
+
+    // GridViews.
+    private ExpandableHeightGridView lhsGridView;
+    private ExpandableHeightGridView rhsGridView;
     private ExpandableHeightGridView resultGridView;
 
-    private MatrixAdapter matrixAdapterA;
-    private MatrixAdapter matrixAdapterB;
+    // Adapters.
+    private MatrixAdapter lhsMatrixAdapter;
+    private MatrixAdapter rhsMatrixAdapter;
     private ResultAdapter resultAdapter;
 
+    // Dimensions.
     private MatrixDimension lhsMatrixDimension;
     private MatrixDimension rhsMatrixDimension;
     private MatrixDimension resultMatrixDimension;
+    private EditingDimension editingDimension = EditingDimension.NONE;
 
+    // DataSource.
     private List<Double> lhsMatrixArray;
     private List<Double> rhsMatrixArray;
     private List<Double> resultMatrixArray;
 
-    private EditingDimension editingDimension = EditingDimension.NONE;
-
+    // Api.
     private MatrixMathApi matrixMathApi = ServiceGenerator.createService(MatrixMathApi.class,
             MatrixMathApi.API_BASE_URL);
 
@@ -81,10 +93,6 @@ public class ComputeMatrixOperationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Intent intent = getIntent();
-        matrixOperation = (MatrixOperation) intent.getSerializableExtra(Extras.EXTRA_MATRIX_OPERATION_TRANSFER);
-
         setup();
     }
 
@@ -93,29 +101,28 @@ public class ComputeMatrixOperationActivity extends AppCompatActivity {
         switch (requestCode) {
             case REQUEST_CODE_MATRIX_DIMENSION_ACTIVITY:
                 if (resultCode == RESULT_OK) {
-                    MatrixDimension dimension = (MatrixDimension) data.getSerializableExtra(Extras.EXTRA_MATRIX_DIMENSION_TRANSFER);
-
+                    MatrixDimension dimension = (MatrixDimension) data.getSerializableExtra(
+                            Extras.EXTRA_MATRIX_DIMENSION_TRANSFER);
                     switch (editingDimension) {
-                        case MATRIX_A:
+                        case LHS_MATRIX:
                             lhsMatrixDimension = dimension;
                             lhsMatrixArray = arrayWithRepeatedValue(lhsMatrixDimension.getCount(), 0.0);
-                            updateNumberOfColumnsForGridView(gridViewA, lhsMatrixDimension);
-                            matrixAdapterA.updateWithNewData(lhsMatrixDimension,
+                            updateNumberOfColumnsForGridView(lhsGridView, lhsMatrixDimension);
+                            lhsMatrixAdapter.updateWithNewData(lhsMatrixDimension,
                                     ListUtils.toListOfString(lhsMatrixArray));
-                            matrixADimensionSizeText.setText(lhsMatrixDimension.dimensionString());
+                            lhsMatrixDimensionSizeText.setText(lhsMatrixDimension.dimensionString());
                             break;
-                        case MATRIX_B:
+                        case RHS_MATRIX:
                             rhsMatrixDimension = dimension;
                             rhsMatrixArray = arrayWithRepeatedValue(rhsMatrixDimension.getCount(), 0.0);
-                            updateNumberOfColumnsForGridView(gridViewB, rhsMatrixDimension);
-                            matrixAdapterB.updateWithNewData(rhsMatrixDimension,
+                            updateNumberOfColumnsForGridView(rhsGridView, rhsMatrixDimension);
+                            rhsMatrixAdapter.updateWithNewData(rhsMatrixDimension,
                                     ListUtils.toListOfString(rhsMatrixArray));
-                            matrixBDimensionSizeText.setText(rhsMatrixDimension.dimensionString());
-                            break;
-                        default:
+                            rhsMatrixDimensionSizeText.setText(rhsMatrixDimension.dimensionString());
                             break;
                     }
                     editingDimension = EditingDimension.NONE;
+                    setResultVisibility(View.INVISIBLE);
                 }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -124,15 +131,81 @@ public class ComputeMatrixOperationActivity extends AppCompatActivity {
     // Helpers.
 
     private void setup() {
-        configureUI();
+        Intent intent = getIntent();
+        matrixOperation = (MatrixOperation) intent.getSerializableExtra(Extras.EXTRA_MATRIX_OPERATION_TRANSFER);
 
-        gridViewA = (ExpandableHeightGridView) findViewById(R.id.grid_view_a);
-        gridViewB = (ExpandableHeightGridView) findViewById(R.id.grid_view_b);
-        resultGridView = (ExpandableHeightGridView) findViewById(R.id.grid_view_result);
+        setContentView(R.layout.activity_compute_matrix_operation);
 
-        assert gridViewA != null;
-        assert gridViewB != null;
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            toolbar.setTitle(matrixOperation.getName());
+        }
+        setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        if (fab != null) {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    hideKeyboard();
+                    computeOperation();
+                }
+            });
+        }
+
+        lhsMatrixDimensionTitle = (TextView) findViewById(R.id.lhs_matrix_dimension_title);
+        rhsMatrixDimensionTitle = (TextView) findViewById(R.id.rhs_matrix_dimension_title);
+        lhsMatrixDimensionSizeText = (TextView) findViewById(R.id.lhs_matrix_dimension_text);
+        rhsMatrixDimensionSizeText = (TextView) findViewById(R.id.rhs_matrix_dimension_text);
+
+        lhsMatrixHeaderTitle = (TextView) findViewById(R.id.lhs_matrix_header_text_view);
+        rhsMatrixHeaderTitle = (TextView) findViewById(R.id.rhs_matrix_header_text_view);
+        resultMatrixHeaderTitle = (TextView) findViewById(R.id.computing_result_header_text_view);
+
+        lhsMatrixDimensionTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editingDimension = EditingDimension.LHS_MATRIX;
+                presentMatrixDimensionActivity(lhsMatrixDimension);
+            }
+        });
+        lhsMatrixDimensionSizeText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editingDimension = EditingDimension.LHS_MATRIX;
+                presentMatrixDimensionActivity(lhsMatrixDimension);
+            }
+        });
+
+        rhsMatrixDimensionTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editingDimension = EditingDimension.RHS_MATRIX;
+                presentMatrixDimensionActivity(rhsMatrixDimension);
+            }
+        });
+        rhsMatrixDimensionSizeText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editingDimension = EditingDimension.RHS_MATRIX;
+                presentMatrixDimensionActivity(rhsMatrixDimension);
+            }
+        });
+
+        lhsGridView = (ExpandableHeightGridView) findViewById(R.id.lhs_grid_view);
+        rhsGridView = (ExpandableHeightGridView) findViewById(R.id.rhs_grid_view);
+        resultGridView = (ExpandableHeightGridView) findViewById(R.id.result_grid_view);
+
+        assert lhsGridView != null;
+        assert rhsGridView != null;
         assert resultGridView != null;
+
+        // Configure matrix dimensions and data source.
 
         final MatrixDimension defaultMatrixDimension = new MatrixDimension(3, 3);
         lhsMatrixDimension = defaultMatrixDimension;
@@ -145,7 +218,7 @@ public class ComputeMatrixOperationActivity extends AppCompatActivity {
                 break;
             case SOLVE:
             case SOLVE_WITH_ERROR_CORRECTION:
-                rhsMatrixDimension = new MatrixDimension(3, 1);
+                rhsMatrixDimension = new MatrixDimension(1, 3);
                 break;
             default:
                 rhsMatrixDimension = new MatrixDimension(0, 0);
@@ -154,83 +227,41 @@ public class ComputeMatrixOperationActivity extends AppCompatActivity {
 
         initMatrices();
 
-        matrixAdapterA = new MatrixAdapter(this, lhsMatrixDimension,
+        lhsMatrixAdapter = new MatrixAdapter(this, lhsMatrixDimension,
                 ListUtils.toListOfString(lhsMatrixArray));
-        gridViewA.setAdapter(matrixAdapterA);
-        updateNumberOfColumnsForGridView(gridViewA, lhsMatrixDimension);
-        gridViewA.setExpanded(true);
+        lhsGridView.setAdapter(lhsMatrixAdapter);
+        updateNumberOfColumnsForGridView(lhsGridView, lhsMatrixDimension);
+        lhsGridView.setExpanded(true);
 
-        matrixAdapterB = new MatrixAdapter(this, rhsMatrixDimension,
+        rhsMatrixAdapter = new MatrixAdapter(this, rhsMatrixDimension,
                 ListUtils.toListOfString(rhsMatrixArray));
-        gridViewB.setAdapter(matrixAdapterB);
-        updateNumberOfColumnsForGridView(gridViewB, rhsMatrixDimension);
-        gridViewB.setExpanded(true);
+        rhsGridView.setAdapter(rhsMatrixAdapter);
+        updateNumberOfColumnsForGridView(rhsGridView, rhsMatrixDimension);
+        rhsGridView.setExpanded(true);
 
-        resultMatrixDimension = defaultMatrixDimension;
+        resultMatrixDimension = MatrixDimension.zeroDimension();
         resultMatrixArray = new ArrayList<>(Collections.nCopies(resultMatrixDimension.getCount(), 0.0));
         resultAdapter = new ResultAdapter(this, resultMatrixDimension, resultMatrixArray);
         resultGridView.setAdapter(resultAdapter);
         updateNumberOfColumnsForGridView(resultGridView, resultMatrixDimension);
         resultGridView.setExpanded(true);
 
-        matrixADimensionSizeText.setText(lhsMatrixDimension.dimensionString());
-        matrixBDimensionSizeText.setText(rhsMatrixDimension.dimensionString());
-    }
+        lhsMatrixDimensionSizeText.setText(lhsMatrixDimension.dimensionString());
+        rhsMatrixDimensionSizeText.setText(rhsMatrixDimension.dimensionString());
 
-    private void configureUI() {
-        setContentView(R.layout.activity_compute_matrix_operation);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            toolbar.setTitle(matrixOperation.getName());
+        switch (matrixOperation.getType()) {
+            case TRANSPOSE:
+            case INVERT:
+            case DETERMINANT:
+                lhsMatrixDimensionTitle.setText(R.string.matrix_dimension_text);
+                lhsMatrixHeaderTitle.setText(R.string.fill_matrix_text);
+
+                rhsMatrixDimensionTitle.setVisibility(View.GONE);
+                rhsMatrixDimensionSizeText.setVisibility(View.GONE);
+                rhsMatrixHeaderTitle.setVisibility(View.GONE);
+                rhsGridView.setVisibility(View.GONE);
+                break;
         }
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        if (fab != null) {
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    hideKeyboard();
-                    computeOperation();
-                }
-            });
-        }
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        matrixADimensionTitle = (TextView) findViewById(R.id.matrix_a_dimension_title);
-        matrixBDimensionTitle = (TextView) findViewById(R.id.matrix_b_dimension_title);
-        matrixADimensionSizeText = (TextView) findViewById(R.id.matrix_a_dimension_text);
-        matrixBDimensionSizeText = (TextView) findViewById(R.id.matrix_b_dimension_text);
-
-        matrixADimensionTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editingDimension = EditingDimension.MATRIX_A;
-                presentMatrixDimensionActivity(lhsMatrixDimension);
-            }
-        });
-        matrixADimensionSizeText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editingDimension = EditingDimension.MATRIX_A;
-                presentMatrixDimensionActivity(lhsMatrixDimension);
-            }
-        });
-
-        matrixBDimensionTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editingDimension = EditingDimension.MATRIX_B;
-                presentMatrixDimensionActivity(rhsMatrixDimension);
-            }
-        });
-        matrixBDimensionSizeText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editingDimension = EditingDimension.MATRIX_B;
-                presentMatrixDimensionActivity(rhsMatrixDimension);
-            }
-        });
     }
 
     private void updateNumberOfColumnsForGridView(GridView gridView, MatrixDimension dimension) {
@@ -260,11 +291,32 @@ public class ComputeMatrixOperationActivity extends AppCompatActivity {
         }
     }
 
+    private void setResultVisibility(int visibility) {
+        LinearLayout resultLayout = (LinearLayout) findViewById(R.id.result_linear_layout);
+        assert resultLayout != null;
+
+        resultLayout.setVisibility(visibility);
+        resultMatrixHeaderTitle.setVisibility(visibility);
+        resultGridView.setVisibility(visibility);
+    }
+
     // Api Calls.
 
     private void computeOperation() {
-        Matrix lhsMatrix = new Matrix(lhsMatrixArray, lhsMatrixDimension);
-        Matrix rhsMatrix = new Matrix(rhsMatrixArray, rhsMatrixDimension);
+        Matrix lhsMatrix;
+        Matrix rhsMatrix;
+
+        try {
+            lhsMatrixArray = ListUtils.toListOfDoubles(lhsMatrixAdapter.getElements());
+            rhsMatrixArray = ListUtils.toListOfDoubles(rhsMatrixAdapter.getElements());
+
+            lhsMatrix = new Matrix(lhsMatrixArray, lhsMatrixDimension);
+            rhsMatrix = new Matrix(rhsMatrixArray, rhsMatrixDimension);
+        } catch (NumberFormatException exception) {
+            Toast.makeText(ComputeMatrixOperationActivity.this, R.string.incorrect_input,
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
 
         switch (matrixOperation.getType()) {
             case ADDITION:
@@ -350,7 +402,7 @@ public class ComputeMatrixOperationActivity extends AppCompatActivity {
                 break;
             case SOLVE:
                 matrixMathApi.solve(new SolveRequestBody(lhsMatrix.getElements(),
-                        rhsMatrix.getOneDimensionData())).enqueue(new Callback<MatrixSolveResponse>() {
+                        rhsMatrix.getOneDimensionArrayOfElements())).enqueue(new Callback<MatrixSolveResponse>() {
                     @Override
                     public void onResponse(Call<MatrixSolveResponse> call, Response<MatrixSolveResponse> response) {
                         successSolveResponse(response);
@@ -364,7 +416,7 @@ public class ComputeMatrixOperationActivity extends AppCompatActivity {
                 break;
             case SOLVE_WITH_ERROR_CORRECTION:
                 matrixMathApi.solveWithErrorCorrection(new SolveRequestBody(lhsMatrix.getElements(),
-                        rhsMatrix.getOneDimensionData())).enqueue(new Callback<MatrixSolveResponse>() {
+                        rhsMatrix.getOneDimensionArrayOfElements())).enqueue(new Callback<MatrixSolveResponse>() {
                     @Override
                     public void onResponse(Call<MatrixSolveResponse> call, Response<MatrixSolveResponse> response) {
                         successSolveResponse(response);
@@ -379,6 +431,11 @@ public class ComputeMatrixOperationActivity extends AppCompatActivity {
         }
     }
 
+    private void updateResultWithNewDataSource() {
+        updateNumberOfColumnsForGridView(resultGridView, resultMatrixDimension);
+        resultAdapter.updateWithNewData(resultMatrixDimension, resultMatrixArray);
+    }
+
     private void successMatrixResponse(Response<MatrixResponse> response) {
         Log.d(LOG_TAG, "Status code: " + response.body().getStatusCode());
         Log.d(LOG_TAG, "Status message: " + response.body().getStatusMessage());
@@ -388,7 +445,13 @@ public class ComputeMatrixOperationActivity extends AppCompatActivity {
             Toast.makeText(ComputeMatrixOperationActivity.this, response.body().getStatusMessage(),
                     Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(ComputeMatrixOperationActivity.this, "Success", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ComputeMatrixOperationActivity.this, R.string.success, Toast.LENGTH_SHORT).show();
+            setResultVisibility(View.VISIBLE);
+
+            Matrix resultMatrix = new Matrix(response.body().getResult());
+            resultMatrixArray = resultMatrix.getOneDimensionArrayOfElements();
+            resultMatrixDimension = resultMatrix.getDimension();
+            updateResultWithNewDataSource();
         }
     }
 
@@ -401,7 +464,12 @@ public class ComputeMatrixOperationActivity extends AppCompatActivity {
             Toast.makeText(ComputeMatrixOperationActivity.this, response.body().getStatusMessage(),
                     Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(ComputeMatrixOperationActivity.this, "Success", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ComputeMatrixOperationActivity.this, R.string.success, Toast.LENGTH_SHORT).show();
+            setResultVisibility(View.VISIBLE);
+
+            resultMatrixArray = response.body().getResult();
+            resultMatrixDimension = new MatrixDimension(1, resultMatrixArray.size());
+            updateResultWithNewDataSource();
         }
     }
 
@@ -414,7 +482,12 @@ public class ComputeMatrixOperationActivity extends AppCompatActivity {
             Toast.makeText(ComputeMatrixOperationActivity.this, response.body().getStatusMessage(),
                     Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(ComputeMatrixOperationActivity.this, "Success", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ComputeMatrixOperationActivity.this, R.string.success, Toast.LENGTH_SHORT).show();
+            setResultVisibility(View.VISIBLE);
+
+            resultMatrixArray = new ArrayList<>(Collections.nCopies(1, response.body().getResult()));
+            resultMatrixDimension = new MatrixDimension(1, 1);
+            updateResultWithNewDataSource();
         }
     }
 

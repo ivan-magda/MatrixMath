@@ -49,4 +49,9 @@ public class MatrixDimension implements Serializable {
                 ", rows=" + rows +
                 '}';
     }
+
+    public static MatrixDimension zeroDimension() {
+        return new MatrixDimension(0, 0);
+    }
+
 }

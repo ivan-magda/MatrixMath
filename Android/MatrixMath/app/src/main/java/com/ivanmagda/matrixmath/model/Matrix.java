@@ -8,15 +8,17 @@ public class Matrix {
     private List<List<Double>> elements;
     private MatrixDimension dimension;
 
-    public List<List<Double>> getElements() {
-        return elements;
-    }
+    public Matrix(List<List<Double>> elements) {
+        this.elements = elements;
 
-    public MatrixDimension getDimension() {
-        return dimension;
+        int columns = elements.size();
+        int rows = elements.get(0).size();
+        this.dimension = new MatrixDimension(columns, rows);
     }
 
     public Matrix(List<Double> data, MatrixDimension dimension) {
+        if (dimension.getCount() != data.size()) throw new AssertionError();
+
         List<List<Double>> res = new ArrayList<>(dimension.getRows());
         for (int columnIdx = 0; columnIdx < dimension.getColumns(); columnIdx++) {
             int elemIdx = columnIdx * dimension.getRows();
@@ -32,14 +34,19 @@ public class Matrix {
         this.dimension = dimension;
     }
 
-    public List<Double> getOneDimensionData() {
-        List<Double> result = new ArrayList<>(dimension.getCount());
-        for (List<Double> anArray : elements) {
-            for (Double element : anArray) {
-                result.add(element);
-            }
-        }
+    public List<List<Double>> getElements() {
+        return elements;
+    }
 
+    public MatrixDimension getDimension() {
+        return dimension;
+    }
+
+    public List<Double> getOneDimensionArrayOfElements() {
+        List<Double> result = new ArrayList<>(dimension.getCount());
+        for (List<Double> anArray : elements)
+            for (Double element : anArray)
+                result.add(element);
         return result;
     }
 

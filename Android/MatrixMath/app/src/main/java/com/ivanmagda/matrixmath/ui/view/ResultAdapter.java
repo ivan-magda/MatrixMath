@@ -63,4 +63,5 @@ public class ResultAdapter extends BaseAdapter {
         this.elements = elements;
         notifyDataSetChanged();
     }
+
 }

@@ -12,14 +12,10 @@ public class ListUtils {
         return res;
     }
 
-    public static List<Double> toListOfDoubles(List<String> list) {
+    public static List<Double> toListOfDoubles(List<String> list) throws NumberFormatException {
         List<Double> res = new ArrayList<>(list.size());
         for (String string : list) {
-            try {
-                res.add(Double.parseDouble(string));
-            } catch (NumberFormatException e) {
-                res.add(0.0);
-            }
+            res.add(Double.parseDouble(string));
         }
         return res;
     }
