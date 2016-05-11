@@ -11,6 +11,9 @@ import java.util.List;
 
 public class MatrixOperationUtils {
 
+    private MatrixOperationUtils() {
+    }
+
     public static List<MatrixOperation> getAllMethods(Context context) {
         List<MatrixOperation> operations = new ArrayList<>(8);
 

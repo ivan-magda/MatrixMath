@@ -40,7 +40,7 @@ public class MatrixDimensionActivity extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setTitle(R.string.matrix_dimension_activity_title);
+            actionBar.setTitle(R.string.title_matrix_dimension_activity);
         }
 
         Intent intent = getIntent();
@@ -140,6 +140,13 @@ public class MatrixDimensionActivity extends AppCompatActivity {
                         .show();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        setResult(RESULT_CANCELED);
+        finish();
     }
 
     private void onActivityResult() {
