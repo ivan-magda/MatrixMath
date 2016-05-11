@@ -1,5 +1,6 @@
 package com.ivanmagda.matrixmath.ui.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -51,6 +52,8 @@ public class ComputeMatrixOperationActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_MATRIX_DIMENSION_ACTIVITY = 1234;
 
     private MatrixOperation matrixOperation;
+
+    private ProgressDialog progressDialog;
 
     // Dimension TextViews.
     private TextView lhsMatrixDimensionTitle;
@@ -300,6 +303,16 @@ public class ComputeMatrixOperationActivity extends AppCompatActivity {
         resultGridView.setVisibility(visibility);
     }
 
+    private void presentProgressIndicator() {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage(getString(R.string.computing_message));
+            progressDialog.setCancelable(false);
+        }
+
+        progressDialog.show();
+    }
+
     // Api Calls.
 
     private void computeOperation() {
@@ -317,6 +330,8 @@ public class ComputeMatrixOperationActivity extends AppCompatActivity {
                     Toast.LENGTH_LONG).show();
             return;
         }
+
+        presentProgressIndicator();
 
         switch (matrixOperation.getType()) {
             case ADDITION:
@@ -441,6 +456,8 @@ public class ComputeMatrixOperationActivity extends AppCompatActivity {
         Log.d(LOG_TAG, "Status message: " + response.body().getStatusMessage());
         Log.d(LOG_TAG, "Result: " + response.body().getResult());
 
+        progressDialog.dismiss();
+
         if (!response.body().isSuccess()) {
             Toast.makeText(ComputeMatrixOperationActivity.this, response.body().getStatusMessage(),
                     Toast.LENGTH_LONG).show();
@@ -460,6 +477,8 @@ public class ComputeMatrixOperationActivity extends AppCompatActivity {
         Log.d(LOG_TAG, "Status message: " + response.body().getStatusMessage());
         Log.d(LOG_TAG, "Result: " + response.body().getResult());
 
+        progressDialog.dismiss();
+
         if (!response.body().isSuccess()) {
             Toast.makeText(ComputeMatrixOperationActivity.this, response.body().getStatusMessage(),
                     Toast.LENGTH_LONG).show();
@@ -478,6 +497,8 @@ public class ComputeMatrixOperationActivity extends AppCompatActivity {
         Log.d(LOG_TAG, "Status message: " + response.body().getStatusMessage());
         Log.d(LOG_TAG, "Result: " + response.body().getResult());
 
+        progressDialog.dismiss();
+
         if (!response.body().isSuccess()) {
             Toast.makeText(ComputeMatrixOperationActivity.this, response.body().getStatusMessage(),
                     Toast.LENGTH_LONG).show();
@@ -493,6 +514,8 @@ public class ComputeMatrixOperationActivity extends AppCompatActivity {
 
     private void failureResponse(Throwable throwable) {
         Log.e(LOG_TAG, "Error: " + throwable.getMessage());
+
+        progressDialog.dismiss();
         Toast.makeText(ComputeMatrixOperationActivity.this, throwable.getMessage(), Toast.LENGTH_LONG).show();
     }
 
